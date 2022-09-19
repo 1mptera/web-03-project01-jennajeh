@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Objects;
+
 public class CheckList {
     private static final String DELETE = "delete";
     private static final String NOT_CHECKED = "notChecked";
@@ -52,5 +54,19 @@ public class CheckList {
     @Override
     public String toString() {
         return toCsvRow();
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        CheckList otherCheckList = (CheckList) other;
+
+        return Objects.equals(this.title, otherCheckList.title())
+                && this.status.equals(otherCheckList.status())
+                && this.city.equals(otherCheckList.city());
     }
 }
