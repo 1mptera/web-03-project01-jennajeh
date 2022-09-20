@@ -32,8 +32,7 @@ public class CheckListDetailPanel extends JPanel {
             }
 
             JPanel checkListsPanel = new JPanel();
-            //checkListsPanel.setOpaque(false);
-            checkListsPanel.setBackground(Color.BLUE);
+            checkListsPanel.setBackground(new Color(0, 0, 0, 122));
             this.add(checkListsPanel);
 
             updateCheckLists(checkList, checkListsPanel);
@@ -63,6 +62,7 @@ public class CheckListDetailPanel extends JPanel {
         checkListsPanel.add(checkBox);
 
         JLabel checkListTitleLabel = new JLabel(checkList.city() + " " + checkList.title());
+        checkListTitleLabel.setForeground(Color.WHITE);
         checkListsPanel.add(checkListTitleLabel);
 
         JButton deleteButton = new JButton("X");

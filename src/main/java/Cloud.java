@@ -17,10 +17,11 @@ public class Cloud {
     }
 
     public void run() {
-        frame = new JFrame("Cloud!");
+        frame = new JFrame("Fries!");
+        //frame.setSize(800, 480);
         frame.setSize(800, 480);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setResizable(false);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
         initImagePanel();
@@ -33,7 +34,7 @@ public class Cloud {
     }
 
     private void initImagePanel() {
-        imagePanel = new ImagePanel("src/main/resources/cloud.jpg");
+        imagePanel = new ImagePanel("src/main/resources/fries.jpg");
         //imagePanel.setOpaque(false);
         imagePanel.setLayout(new BorderLayout());
         frame.add(imagePanel);

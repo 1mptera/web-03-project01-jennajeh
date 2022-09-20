@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +36,9 @@ public class CheckListPanel extends JPanel {
     private JPanel inputPanel;
     private JPanel wholePanel;
     private JPanel addButtonPanel;
+    private JPanel fieldPanel;
+    private JPanel initListsPanel;
+    private CheckListDetailPanel checkListDetailPanel;
 
     public CheckListPanel() throws FileNotFoundException {
         initWholePanel();
@@ -48,34 +52,37 @@ public class CheckListPanel extends JPanel {
         checkListFileManager = new CheckListFileManager();
 
         checkLists = checkListFileManager.loadCheckList();
+
+        initListsPanel(new CheckListDetailPanel(checkLists));
     }
 
     private void initWholePanel() {
         wholePanel = new JPanel();
         //wholePanel.setOpaque(false);
+        wholePanel.setBackground(new Color(0, 0, 0, 122));
         wholePanel.setLayout(new BorderLayout());
-        wholePanel.setBackground(Color.yellow);
 
-        //this.setOpaque(false);
-        this.setBackground(Color.DARK_GRAY);
-        this.setLayout(new GridLayout(0, 1));
+        this.setOpaque(false);
+        this.setLayout(new BorderLayout());
         this.add(wholePanel, BorderLayout.PAGE_START);
     }
 
     private void initButtonPanel() {
         buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
         buttonPanel.setOpaque(false);
 
         buttonPanel.add(mainButton());
         buttonPanel.add(logoutButton());
 
+//        wholePanel.add(buttonPanel, BorderLayout.PAGE_START);
         wholePanel.add(buttonPanel);
     }
 
     private JButton mainButton() {
         JButton mainButton = new JButton("메인 화면");
         mainButton.addActionListener(event -> {
-            updatePanel(new MainPanel());
+            updateContentPanel(new MainPanel());
         });
 
         return mainButton;
@@ -88,7 +95,7 @@ public class CheckListPanel extends JPanel {
 
             JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Cloud!", JOptionPane.PLAIN_MESSAGE);
 
-            updatePanel(new InitLoginPanel());
+            updateContentPanel(new InitLoginPanel());
         });
 
         return logoutButton;
@@ -97,36 +104,30 @@ public class CheckListPanel extends JPanel {
     private void initContentPanel() {
         contentPanel = new JPanel();
         contentPanel.setLayout(new GridLayout(0, 1));
-        contentPanel.setBackground(Color.red);
-        //contentPanel.setOpaque(false);
+        contentPanel.setOpaque(false);
 
         JLabel label = new JLabel("체크리스트 관리");
         label.setHorizontalAlignment(JLabel.CENTER);
         contentPanel.add(label);
-        //contentPanel.add(inputPanel());
-
-        this.add(contentPanel);
+        buttonPanel.add(contentPanel, BorderLayout.PAGE_START);
     }
 
     private void inputPanel() {
         inputPanel = new JPanel();
-        //inputPanel.setOpaque(false);
-        inputPanel.setBackground(Color.GREEN);
+        inputPanel.setOpaque(false);
+        contentPanel.add(inputPanel, BorderLayout.PAGE_START);
+
+        fieldPanel = new JPanel();
+        fieldPanel.setOpaque(false);
+
         JLabel label = new JLabel("* 찜한 식당 *");
-        inputPanel.add(label);
+        fieldPanel.add(label);
 
         textField = new JTextField(10);
-
-        inputPanel.add(textField);
+        fieldPanel.add(textField);
 
         makeComboBox();
 
-        inputPanel.add(addLists());
-
-        this.add(inputPanel);
-    }
-
-    private JButton addLists() {
         JButton button = new JButton("등록");
         button.addActionListener(event -> {
             text = textField.getText();
@@ -150,10 +151,12 @@ public class CheckListPanel extends JPanel {
             textField.setText("");
         });
 
-        return button;
+        fieldPanel.add(button);
+
+        inputPanel.add(fieldPanel);
     }
 
-    private void makeComboBox() {
+    public void makeComboBox() {
         List<City> cities = new ArrayList<>(Cities.CITIES);
 
         JComboBox comboBox = new JComboBox();
@@ -170,20 +173,33 @@ public class CheckListPanel extends JPanel {
             }
         });
 
-        inputPanel.add(comboBox);
+        fieldPanel.add(comboBox);
+    }
+
+    public void initListsPanel(JPanel panel) {
+        initListsPanel = new JPanel();
+
+        initListsPanel.add(panel);
+
+        initListsPanel.setOpaque(false);
+
+        this.add(initListsPanel);
     }
 
     public void updatePanel(JPanel panel) {
+        initListsPanel.removeAll();
+        initListsPanel.add(panel);
+
+        initListsPanel.setVisible(false);
+        initListsPanel.setVisible(true);
+    }
+
+    public void updateContentPanel(JPanel panel) {
         this.removeAll();
-
-        initWholePanel();
-        initButtonPanel();
-        initContentPanel();
-        inputPanel();
-
         this.add(panel);
 
         this.setVisible(false);
         this.setVisible(true);
     }
+
 }
