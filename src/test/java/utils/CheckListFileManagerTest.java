@@ -25,5 +25,4 @@ class CheckListFileManagerTest {
         assertEquals(new CheckList("[서울]", "와하카", "notChecked"), checkList1);
         assertEquals(new CheckList("[대전]", "성심당", "notChecked"), checkList2);
     }
-
 }
