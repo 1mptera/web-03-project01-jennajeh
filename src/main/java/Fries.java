@@ -5,20 +5,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
-public class Cloud {
+public class Fries {
     private JFrame frame;
     private JPanel contentPanel;
     private JPanel imagePanel;
     private StartPanel startPanel;
 
     public static void main(String[] args) {
-        Cloud application = new Cloud();
+        Fries application = new Fries();
         application.run();
     }
 
     public void run() {
         frame = new JFrame("Fries!");
-        frame.setSize(800, 480);
+        frame.setSize(700, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -33,7 +33,7 @@ public class Cloud {
     }
 
     private void initImagePanel() {
-        imagePanel = new ImagePanel("src/main/resources/fries.jpg");
+        imagePanel = new ImagePanel("src/main/resources/img.png");
         imagePanel.setLayout(new BorderLayout());
         frame.add(imagePanel);
     }

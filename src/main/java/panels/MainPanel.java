@@ -48,7 +48,7 @@ public class MainPanel extends JPanel {
         checkListButton.addActionListener(event -> {
             JOptionPane optionPane = new JOptionPane();
 
-            JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Cloud!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
             updatePanel(new InitLoginPanel());
         });

@@ -93,7 +93,7 @@ public class CheckListPanel extends JPanel {
         logoutButton.addActionListener(event -> {
             JOptionPane optionPane = new JOptionPane();
 
-            JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Cloud!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
             updateContentPanel(new InitLoginPanel());
         });
@@ -107,7 +107,9 @@ public class CheckListPanel extends JPanel {
         contentPanel.setOpaque(false);
 
         JLabel label = new JLabel("체크리스트 관리");
+        label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(JLabel.CENTER);
+
         contentPanel.add(label);
         buttonPanel.add(contentPanel, BorderLayout.PAGE_START);
     }
@@ -121,6 +123,7 @@ public class CheckListPanel extends JPanel {
         fieldPanel.setOpaque(false);
 
         JLabel label = new JLabel("* 찜한 식당 *");
+        label.setForeground(Color.WHITE);
         fieldPanel.add(label);
 
         textField = new JTextField(10);
