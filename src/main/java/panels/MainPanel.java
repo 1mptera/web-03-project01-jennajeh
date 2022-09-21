@@ -11,7 +11,9 @@ import java.util.List;
 public class MainPanel extends JPanel {
     private List<User> users;
 
-    public MainPanel() {
+    public MainPanel(List<User> users) {
+        this.users = users;
+
         initButtonPanel();
     }
 
@@ -30,7 +32,7 @@ public class MainPanel extends JPanel {
         JButton checkListButton = new JButton("체크 리스트");
         checkListButton.addActionListener(event -> {
             try {
-                updatePanel(new CheckListPanel());
+                updatePanel(new CheckListPanel(users));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

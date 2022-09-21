@@ -1,13 +1,9 @@
 package panels;
 
-import models.User;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import java.util.List;
 
 public class MainPanelWithoutId extends JPanel {
-    private List<User> users;
 
     public MainPanelWithoutId() {
         initButtonPanel();

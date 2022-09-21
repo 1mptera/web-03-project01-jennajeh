@@ -49,4 +49,10 @@ public class User {
     public String toCsvRow() {
         return userId + "," + password + "," + name + "," + gender;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + userId + ", name: " + name
+                + ", password: " + password + ", name: " + gender;
+    }
 }

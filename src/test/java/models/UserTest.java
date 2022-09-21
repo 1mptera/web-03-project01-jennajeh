@@ -23,5 +23,4 @@ class UserTest {
 
         assertEquals("nada,asdf1234,전겨울,여자", user.toCsvRow());
     }
-
 }
