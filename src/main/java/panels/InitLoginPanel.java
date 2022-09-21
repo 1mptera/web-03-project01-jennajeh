@@ -34,7 +34,7 @@ public class InitLoginPanel extends JPanel {
         loginPanel.setLayout(new GridLayout(0, 1));
         loginPanel.setBackground(new Color(0, 0, 0, 122));
         loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
-        loginPanel.setPreferredSize(new Dimension(450, 250));
+        loginPanel.setPreferredSize(new Dimension(550, 250));
 
         idLabel();
         idTextField();
@@ -52,6 +52,7 @@ public class InitLoginPanel extends JPanel {
 
         buttonPanel.add(loginButton());
         buttonPanel.add(signUpButton());
+        buttonPanel.add(withoutIdButton());
         buttonPanel.add(quitButton());
 
         return buttonPanel;
@@ -109,8 +110,7 @@ public class InitLoginPanel extends JPanel {
                         break;
                     }
 
-                    //if (!id.equals(user.userId()) && !password.equals(user.password())) {
-                    if (!id.equals(user.userId()) && !password.equals(user.password())) {
+                    if (!users.contains(id)) {
                         JOptionPane optionPane = new JOptionPane();
 
                         optionPane.showMessageDialog(null, "없는 계정입니다. 회원가입을 진행해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
@@ -129,7 +129,7 @@ public class InitLoginPanel extends JPanel {
                         idTextField.setText("");
                         passwordField.setText("");
 
-                        break;
+                        return;
                     }
                 }
             }
@@ -145,6 +145,15 @@ public class InitLoginPanel extends JPanel {
         });
 
         return signUpButton;
+    }
+
+    private JButton withoutIdButton() {
+        JButton withoutIdButton = new JButton("비회원 입장");
+        withoutIdButton.addActionListener(event -> {
+            updateContentPanel(new MainPanelWithoutId());
+        });
+
+        return withoutIdButton;
     }
 
     private JButton quitButton() {

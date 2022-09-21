@@ -171,7 +171,13 @@ public class signUpPanel extends JPanel {
                 optionPane.showMessageDialog(null, "성별을 선택해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
                 return;
             }
+            if (idCheck(id)) {
+                JOptionPane optionPane = new JOptionPane();
 
+                optionPane.showMessageDialog(null, "중복된 아이디 입니다. 다시 입력해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+                return;
+            }
+            
             User user = new User(id, password, name, gender);
 
             users.add(user);
@@ -187,6 +193,15 @@ public class signUpPanel extends JPanel {
         });
 
         return signUpButton;
+    }
+
+    private boolean idCheck(String id) {
+        for (User user : users) {
+            if (id.equals(user.userId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void saveUsers() throws IOException {
