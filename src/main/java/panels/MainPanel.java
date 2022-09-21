@@ -1,11 +1,16 @@
 package panels;
 
+import models.User;
+
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public class MainPanel extends JPanel {
+    private List<User> users;
+
     public MainPanel() {
         initButtonPanel();
     }
@@ -37,7 +42,7 @@ public class MainPanel extends JPanel {
     private JButton reviewButton() {
         JButton checkListButton = new JButton("리뷰 게시판");
         checkListButton.addActionListener(event -> {
-
+            updatePanel(new ReviewPanel(users));
         });
 
         return checkListButton;
@@ -50,7 +55,7 @@ public class MainPanel extends JPanel {
 
             JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
-            updatePanel(new InitLoginPanel());
+            updatePanel(new InitLoginPanel(users));
         });
 
         return checkListButton;

@@ -1,83 +1,138 @@
 package panels;
 
+import models.User;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.TextField;
+import java.util.List;
 
 public class InitLoginPanel extends JPanel {
-    private JPanel initInputPanel;
-    private JPanel initButtonPanel;
-    private JPanel contentPanel;
+    private List<User> users;
 
-    public InitLoginPanel() {
-        initInputPanel();
+    private JPanel loginPanel;
+    private JPanel buttonPanel;
+    private JTextField passwordField;
+    private JTextField idTextField;
 
-        initButtonPanel();
-    }
+    public InitLoginPanel(List<User> users) {
+        this.users = users;
 
-    private void initInputPanel() {
-        initInputPanel = new JPanel();
-        initInputPanel.setLayout(new GridLayout(0, 1));
-        initInputPanel.setBackground(new Color(0, 0, 0, 122));
-        initInputPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
-        initInputPanel.setPreferredSize(new Dimension(450, 250));
-
-        this.add(initInputPanel);
         this.setOpaque(false);
 
-        inputLoginInfo();
+        this.add(loginPanel());
     }
 
-    private void inputLoginInfo() {
-        initInputPanel.add(userIdLabel());
-        initInputPanel.add(userIdTextField());
-        initInputPanel.add(userPwdLabel());
-        initInputPanel.add(userPwdTextField());
+    private JPanel loginPanel() {
+        loginPanel = new JPanel();
+        loginPanel.setLayout(new GridLayout(0, 1));
+        loginPanel.setBackground(new Color(0, 0, 0, 122));
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
+        loginPanel.setPreferredSize(new Dimension(450, 250));
+
+        idLabel();
+        idTextField();
+        passwordLabel();
+        passwordField();
+
+        loginPanel.add(buttonPanel());
+
+        return loginPanel;
     }
 
-    private JLabel userIdLabel() {
-        JLabel userIdLabel = new JLabel("아이디");
-        userIdLabel.setForeground(Color.WHITE);
-        return userIdLabel;
+    private JPanel buttonPanel() {
+        buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+
+        buttonPanel.add(loginButton());
+        buttonPanel.add(signUpButton());
+        buttonPanel.add(quitButton());
+
+        return buttonPanel;
     }
 
-    private TextField userIdTextField() {
-        TextField userIdTextField = new TextField(10);
-        return userIdTextField;
+    private void idLabel() {
+        JLabel idLabel = new JLabel("아이디");
+        idLabel.setForeground(Color.WHITE);
+        loginPanel.add(idLabel);
     }
 
-    private JLabel userPwdLabel() {
-        JLabel userPwdLabel = new JLabel("비밀번호");
-        userPwdLabel.setForeground(Color.WHITE);
-        return userPwdLabel;
+    private void idTextField() {
+        idTextField = new JTextField(10);
+        loginPanel.add(idTextField);
     }
 
-    private TextField userPwdTextField() {
-        TextField userPwdTextField = new TextField(10);
-        userPwdTextField.selectAll();
-        userPwdTextField.setEchoChar('*');
-        return userPwdTextField;
+    private void passwordLabel() {
+        JLabel passwordLabel = new JLabel("비밀번호");
+        passwordLabel.setForeground(Color.WHITE);
+        loginPanel.add(passwordLabel);
     }
 
-    private void initButtonPanel() {
-        initButtonPanel = new JPanel();
-        initButtonPanel.setOpaque(false);
-        initButtonPanel.add(loginButton());
-        initButtonPanel.add(signUpButton());
-        initButtonPanel.add(quitButton());
-
-        initInputPanel.add(initButtonPanel);
+    private void passwordField() {
+        passwordField = new JTextField(10);
+        loginPanel.add(passwordField);
     }
 
     private JButton loginButton() {
         JButton loginButton = new JButton("로그인");
         loginButton.addActionListener(event -> {
-            updateContentPanel(new MainPanel());
+            String id = idTextField.getText();
+            String password = passwordField.getText();
+
+            if (id.length() == 0) {
+                JOptionPane optionPane = new JOptionPane();
+
+                optionPane.showMessageDialog(null, "아이디를 입력하세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+                return;
+            }
+
+            if (password.length() == 0) {
+                JOptionPane optionPane = new JOptionPane();
+
+                optionPane.showMessageDialog(null, "비밀번호를 입력하세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+                return;
+            }
+
+            if (id.length() != 0 && password.length() != 0) {
+                for (User user : users) {
+                    if (id.equals(user.userId()) && password.equals(user.password())) {
+                        user.login();
+
+                        updateContentPanel(new MainPanel());
+
+                        break;
+                    }
+
+                    //if (!id.equals(user.userId()) && !password.equals(user.password())) {
+                    if (!id.equals(user.userId()) && !password.equals(user.password())) {
+                        JOptionPane optionPane = new JOptionPane();
+
+                        optionPane.showMessageDialog(null, "없는 계정입니다. 회원가입을 진행해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+
+                        idTextField.setText("");
+                        passwordField.setText("");
+
+                        return;
+                    }
+
+                    if (!id.equals(user.userId()) || !password.equals(user.password())) {
+                        JOptionPane optionPane = new JOptionPane();
+
+                        optionPane.showMessageDialog(null, "아이디 또는 비밀번호를 잘못 입력했습니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+
+                        idTextField.setText("");
+                        passwordField.setText("");
+
+                        break;
+                    }
+                }
+            }
         });
 
         return loginButton;
@@ -86,7 +141,7 @@ public class InitLoginPanel extends JPanel {
     private JButton signUpButton() {
         JButton signUpButton = new JButton("회원가입");
         signUpButton.addActionListener(event -> {
-
+            updateContentPanel(new signUpPanel(users));
         });
 
         return signUpButton;
