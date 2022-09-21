@@ -1,19 +1,31 @@
+import models.User;
 import panels.ImagePanel;
 import panels.StartPanel;
+import utils.UserFileManager;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 public class Fries {
+    private List<User> users;
+
     private JFrame frame;
     private JPanel contentPanel;
     private JPanel imagePanel;
     private StartPanel startPanel;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         Fries application = new Fries();
         application.run();
+    }
+
+    public Fries() throws FileNotFoundException {
+        UserFileManager userFileManager = new UserFileManager();
+
+        users = userFileManager.loadUserLists();
     }
 
     public void run() {
@@ -45,7 +57,7 @@ public class Fries {
     }
 
     public void initStartPanel() {
-        startPanel = new StartPanel();
+        startPanel = new StartPanel(users);
 
         contentPanel.removeAll();
         contentPanel.add(startPanel);

@@ -3,6 +3,7 @@ package panels;
 import models.CheckList;
 import models.Cities;
 import models.City;
+import models.User;
 import utils.CheckListFileManager;
 
 import javax.swing.JButton;
@@ -28,17 +29,15 @@ public class CheckListPanel extends JPanel {
     private String data = "";
     private String text = "";
     private List<CheckList> checkLists;
+    private List<User> users;
 
     private JTextField textField;
-    private JLabel titleLabel;
     private JPanel buttonPanel;
     private JPanel contentPanel;
     private JPanel inputPanel;
     private JPanel wholePanel;
-    private JPanel addButtonPanel;
     private JPanel fieldPanel;
     private JPanel initListsPanel;
-    private CheckListDetailPanel checkListDetailPanel;
 
     public CheckListPanel() throws FileNotFoundException {
         initWholePanel();
@@ -58,7 +57,6 @@ public class CheckListPanel extends JPanel {
 
     private void initWholePanel() {
         wholePanel = new JPanel();
-        //wholePanel.setOpaque(false);
         wholePanel.setBackground(new Color(0, 0, 0, 122));
         wholePanel.setLayout(new BorderLayout());
 
@@ -75,7 +73,6 @@ public class CheckListPanel extends JPanel {
         buttonPanel.add(mainButton());
         buttonPanel.add(logoutButton());
 
-//        wholePanel.add(buttonPanel, BorderLayout.PAGE_START);
         wholePanel.add(buttonPanel);
     }
 
@@ -95,7 +92,7 @@ public class CheckListPanel extends JPanel {
 
             JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
-            updateContentPanel(new InitLoginPanel());
+            updateContentPanel(new InitLoginPanel(users));
         });
 
         return logoutButton;
@@ -159,7 +156,7 @@ public class CheckListPanel extends JPanel {
         inputPanel.add(fieldPanel);
     }
 
-    public void makeComboBox() {
+    private void makeComboBox() {
         List<City> cities = new ArrayList<>(Cities.CITIES);
 
         JComboBox comboBox = new JComboBox();
@@ -179,7 +176,7 @@ public class CheckListPanel extends JPanel {
         fieldPanel.add(comboBox);
     }
 
-    public void initListsPanel(JPanel panel) {
+    private void initListsPanel(JPanel panel) {
         initListsPanel = new JPanel();
 
         initListsPanel.add(panel);
@@ -189,7 +186,7 @@ public class CheckListPanel extends JPanel {
         this.add(initListsPanel);
     }
 
-    public void updatePanel(JPanel panel) {
+    private void updatePanel(JPanel panel) {
         initListsPanel.removeAll();
         initListsPanel.add(panel);
 
@@ -197,7 +194,7 @@ public class CheckListPanel extends JPanel {
         initListsPanel.setVisible(true);
     }
 
-    public void updateContentPanel(JPanel panel) {
+    private void updateContentPanel(JPanel panel) {
         this.removeAll();
         this.add(panel);
 
