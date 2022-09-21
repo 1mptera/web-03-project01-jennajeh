@@ -39,7 +39,9 @@ public class CheckListPanel extends JPanel {
     private JPanel fieldPanel;
     private JPanel initListsPanel;
 
-    public CheckListPanel() throws FileNotFoundException {
+    public CheckListPanel(List<User> users) throws FileNotFoundException {
+        this.users = users;
+
         initWholePanel();
 
         initButtonPanel();
@@ -79,7 +81,7 @@ public class CheckListPanel extends JPanel {
     private JButton mainButton() {
         JButton mainButton = new JButton("메인 화면");
         mainButton.addActionListener(event -> {
-            updateContentPanel(new MainPanel());
+            updateContentPanel(new MainPanel(users));
         });
 
         return mainButton;

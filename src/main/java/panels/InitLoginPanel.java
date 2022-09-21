@@ -105,33 +105,30 @@ public class InitLoginPanel extends JPanel {
                     if (id.equals(user.userId()) && password.equals(user.password())) {
                         user.login();
 
-                        updateContentPanel(new MainPanel());
-
-                        break;
-                    }
-
-                    if (!users.contains(id)) {
-                        JOptionPane optionPane = new JOptionPane();
-
-                        optionPane.showMessageDialog(null, "없는 계정입니다. 회원가입을 진행해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
-
-                        idTextField.setText("");
-                        passwordField.setText("");
+                        updateContentPanel(new MainPanel(users));
 
                         return;
                     }
 
-                    if (!id.equals(user.userId()) || !password.equals(user.password())) {
+                    if (user.userId().equals(id) && !user.password().equals(password)) {
                         JOptionPane optionPane = new JOptionPane();
 
-                        optionPane.showMessageDialog(null, "아이디 또는 비밀번호를 잘못 입력했습니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
-
-                        idTextField.setText("");
-                        passwordField.setText("");
+                        optionPane.showMessageDialog(null, "비밀번호를 잘못 입력했습니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
 
                         return;
                     }
                 }
+            }
+
+            if (!users.contains(id) && !users.contains(password)) {
+                JOptionPane optionPane = new JOptionPane();
+
+                optionPane.showMessageDialog(null, "없는 계정입니다. 회원가입을 진행해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+
+                idTextField.setText("");
+                passwordField.setText("");
+
+                return;
             }
         });
 

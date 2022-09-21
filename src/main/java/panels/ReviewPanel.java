@@ -32,7 +32,7 @@ public class ReviewPanel extends JPanel {
 
     public ReviewPanel(List<User> users) {
         this.users = users;
-        
+
         initButtonPanel();
 
         initContentPanel();
@@ -57,7 +57,7 @@ public class ReviewPanel extends JPanel {
     private JButton mainButton() {
         JButton mainButton = new JButton("메인 화면");
         mainButton.addActionListener(event -> {
-            updateContentPanel(new MainPanel());
+            updateContentPanel(new MainPanel(users));
         });
 
         return mainButton;
@@ -67,7 +67,7 @@ public class ReviewPanel extends JPanel {
         JButton checkListButton = new JButton("체크 리스트");
         checkListButton.addActionListener(event -> {
             try {
-                updateContentPanel(new CheckListPanel());
+                updateContentPanel(new CheckListPanel(users));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
