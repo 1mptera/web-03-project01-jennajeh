@@ -39,7 +39,7 @@ public class StartPanel extends JPanel {
         return quitButton;
     }
 
-    public void updatePanel(JPanel panel) {
+    private void updatePanel(JPanel panel) {
         this.removeAll();
         this.add(panel);
         this.setVisible(false);

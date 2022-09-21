@@ -4,6 +4,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -12,12 +13,22 @@ import java.awt.TextField;
 public class InitLoginPanel extends JPanel {
     private JPanel initInputPanel;
     private JPanel initButtonPanel;
-    private JPanel contentPanel;
 
     public InitLoginPanel() {
+        initTopPanel();
+
         initInputPanel();
 
         initButtonPanel();
+    }
+
+    private void initTopPanel() {
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.setPreferredSize(new Dimension(80, 100));
+        topPanel.setOpaque(false);
+        this.setLayout(new BorderLayout());
+        this.add(topPanel, BorderLayout.PAGE_START);
     }
 
     private void initInputPanel() {
@@ -77,6 +88,8 @@ public class InitLoginPanel extends JPanel {
     private JButton loginButton() {
         JButton loginButton = new JButton("로그인");
         loginButton.addActionListener(event -> {
+            
+
             updateContentPanel(new MainPanel());
         });
 

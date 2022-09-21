@@ -85,7 +85,7 @@ public class CheckListDetailPanel extends JPanel {
         }
     }
 
-    public void updateDisplay() {
+    private void updateDisplay() {
         this.removeAll();
         this.initLists();
         this.setVisible(false);
