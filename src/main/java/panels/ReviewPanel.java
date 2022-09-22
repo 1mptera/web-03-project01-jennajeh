@@ -36,6 +36,7 @@ public class ReviewPanel extends JPanel {
     private JPanel searchPanel;
     private JPanel guidePanel;
     private JLabel reviewLabel;
+    private JPanel reviewsPanel;
 
     public ReviewPanel(List<User> users, CurrentUser currentUser) throws FileNotFoundException {
         this.users = users;
@@ -74,6 +75,24 @@ public class ReviewPanel extends JPanel {
         searchPanel.add(searchTextField);
 
         searchButton = new JButton("검색");
+        searchButton.addActionListener(event -> {
+            reviewsPanel.removeAll();
+
+            String category = choice;
+            String text = searchTextField.getText();
+
+            for (Review review : reviews) {
+                if (text.isBlank()) {
+                    continue;
+                }
+
+                reviewsPanel.removeAll();
+                buttonPanel();
+
+                reviewsPanel.setVisible(false);
+                reviewsPanel.setVisible(true);
+            }
+        });
         searchPanel.add(searchButton);
 
         contentPanel();
@@ -179,17 +198,17 @@ public class ReviewPanel extends JPanel {
     }
 
     private void reviewsPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(0, 1));
-        panel.setBackground(new Color(255, 255, 255, 122));
-        contentPanel.add(panel);
+        reviewsPanel = new JPanel();
+        reviewsPanel.setLayout(new GridLayout(0, 1));
+        reviewsPanel.setBackground(new Color(255, 255, 255, 122));
+        contentPanel.add(reviewsPanel);
 
         for (Review review : reviews) {
             reviewLabel = new JLabel();
             reviewLabel.setHorizontalAlignment(JLabel.CENTER);
             reviewLabel.setText(review.category() + " " + review.title() + "                       "
                     + review.userId());
-            panel.add(reviewLabel);
+            reviewsPanel.add(reviewLabel);
         }
 
         reviewLabel.addMouseListener(new MouseAdapter() {

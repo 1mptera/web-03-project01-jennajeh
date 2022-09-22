@@ -4,8 +4,6 @@ public class Review {
     private static final String TITLE = "제목";
     private static final String USERID = "아이디";
 
-    public static final String[] CATEGORY = {"선택하세요.", "제목", "아이디",};
-
     private String title;
     private String userId;
     private String userName;
@@ -13,7 +11,6 @@ public class Review {
     private String content;
     private String status;
     private String category;
-    private String displayTime;
 
     public Review() {
     }
@@ -77,13 +74,5 @@ public class Review {
 
     public void modified() {
         this.status = "modified";
-    }
-
-    public String displayTime() {
-        String[] times = time.split("-");
-
-        displayTime = times[0];
-
-        return displayTime;
     }
 }
