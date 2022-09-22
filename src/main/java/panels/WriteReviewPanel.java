@@ -30,10 +30,10 @@ public class WriteReviewPanel extends JPanel {
     private CurrentUser currentUser;
 
     private String categoryData = "";
-    String title = "";
-    String category = "";
-    String content = "";
-    String id = "";
+    private String title = "";
+    private String category = "";
+    private String content = "";
+    private String id = "";
 
     private JPanel initPanel;
     private JPanel textAreaPanel;
@@ -41,13 +41,11 @@ public class WriteReviewPanel extends JPanel {
     private JTextField titleField;
     private JComboBox comboBox;
     private JTextArea textArea;
-    private ReviewFileManager reviewFileManager;
 
-    public WriteReviewPanel(List<User> users, List<Review> reviews, CurrentUser currentUser, ReviewFileManager reviewFileManager) {
+    public WriteReviewPanel(List<User> users, List<Review> reviews, CurrentUser currentUser) {
         this.users = users;
         this.reviews = reviews;
         this.currentUser = currentUser;
-        this.reviewFileManager = reviewFileManager;
 
         this.setLayout(new BorderLayout());
         this.setOpaque(false);
@@ -65,7 +63,8 @@ public class WriteReviewPanel extends JPanel {
         textAreaPanel();
         textArea();
         buttonPanel();
-        button();
+        addButton();
+        backButton();
     }
 
     private void initPanel() {
@@ -137,9 +136,9 @@ public class WriteReviewPanel extends JPanel {
         this.add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private void button() {
-        JButton button = new JButton("등록");
-        button.addActionListener(event -> {
+    private void addButton() {
+        JButton addButton = new JButton("등록");
+        addButton.addActionListener(event -> {
             category = categoryData;
             title = titleField.getText();
             id = currentUser.id();
@@ -153,10 +152,17 @@ public class WriteReviewPanel extends JPanel {
             reviews.add(review);
 
             try {
+                ReviewFileManager reviewFileManager = new ReviewFileManager();
+
                 reviewFileManager.saveReviews(reviews);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+//              removeAll();
+//            setVisible(false);
+//            setVisible(true);
+
 
             try {
                 updateContentPanel(new ReviewPanel(users, currentUser));
@@ -165,13 +171,24 @@ public class WriteReviewPanel extends JPanel {
             }
 
         });
-        buttonPanel.add(button);
+        buttonPanel.add(addButton);
+    }
+
+    private void backButton() {
+        JButton backButton = new JButton("취소");
+        backButton.addActionListener(event -> {
+            try {
+                updateContentPanel(new ReviewPanel(users, currentUser));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        buttonPanel.add(backButton);
     }
 
     private void updateContentPanel(JPanel panel) {
         this.removeAll();
         this.add(panel);
-
         this.setVisible(false);
         this.setVisible(true);
     }

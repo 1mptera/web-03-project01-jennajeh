@@ -4,7 +4,6 @@ import models.CheckList;
 import models.Cities;
 import models.City;
 import models.CurrentUser;
-import models.User;
 import utils.CheckListFileManager;
 
 import javax.swing.JButton;
@@ -28,7 +27,6 @@ public class CheckListPanel extends JPanel {
     private CheckListFileManager checkListFileManager;
     private CurrentUser currentUser;
     private List<CheckList> checkLists;
-    private List<User> users;
 
     private String data = "";
     private String text = "";
@@ -41,8 +39,7 @@ public class CheckListPanel extends JPanel {
     private JPanel fieldPanel;
     private JPanel initListsPanel;
 
-    public CheckListPanel(List<User> users, CurrentUser currentUser) throws FileNotFoundException {
-        this.users = users;
+    public CheckListPanel(CurrentUser currentUser) throws FileNotFoundException {
         this.currentUser = currentUser;
 
         initWholePanel();
@@ -83,7 +80,7 @@ public class CheckListPanel extends JPanel {
     private JButton mainButton() {
         JButton mainButton = new JButton("메인 화면");
         mainButton.addActionListener(event -> {
-            updateContentPanel(new MainPanel(users, currentUser));
+            updateContentPanel(new MainPanel(currentUser));
         });
 
         return mainButton;
@@ -98,7 +95,11 @@ public class CheckListPanel extends JPanel {
 
             currentUser.logout();
 
-            updateContentPanel(new InitLoginPanel(users, currentUser));
+            try {
+                updateContentPanel(new InitLoginPanel());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         return logoutButton;

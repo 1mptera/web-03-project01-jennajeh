@@ -1,7 +1,6 @@
 package panels;
 
 import models.CurrentUser;
-import models.Review;
 import models.User;
 
 import javax.swing.JButton;
@@ -12,8 +11,13 @@ import java.util.List;
 
 public class MainPanel extends JPanel {
     private List<User> users;
-    private List<Review> reviews;
     private CurrentUser currentUser;
+
+    public MainPanel(CurrentUser currentUser) {
+        this.currentUser = currentUser;
+
+        initButtonPanel();
+    }
 
     public MainPanel(List<User> users, CurrentUser currentUser) {
         this.users = users;
@@ -24,10 +28,11 @@ public class MainPanel extends JPanel {
 
     private void initButtonPanel() {
         JPanel initButtonPanel = new JPanel();
+        initButtonPanel.setOpaque(false);
+
         initButtonPanel.add(checkListButton());
         initButtonPanel.add(reviewButton());
         initButtonPanel.add(logoutButton());
-        initButtonPanel.setOpaque(false);
 
         this.setOpaque(false);
         this.add(initButtonPanel);
@@ -37,7 +42,7 @@ public class MainPanel extends JPanel {
         JButton checkListButton = new JButton("체크 리스트");
         checkListButton.addActionListener(event -> {
             try {
-                updatePanel(new CheckListPanel(users, currentUser));
+                updatePanel(new CheckListPanel(currentUser));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -68,7 +73,11 @@ public class MainPanel extends JPanel {
 
             currentUser.logout();
 
-            updatePanel(new InitLoginPanel(users, currentUser));
+            try {
+                updatePanel(new InitLoginPanel());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         return checkListButton;

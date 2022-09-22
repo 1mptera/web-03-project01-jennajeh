@@ -1,21 +1,21 @@
 package panels;
 
 import models.CurrentUser;
+import models.Review;
 import models.User;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class StartPanel extends JPanel {
     private List<User> users;
+    private List<Review> reviews;
     private CurrentUser currentUser;
 
-    public StartPanel(List<User> users, CurrentUser currentUser) {
-        this.users = users;
-        this.currentUser = currentUser;
-
+    public StartPanel() {
         initButtonPanel();
     }
 
@@ -32,7 +32,11 @@ public class StartPanel extends JPanel {
     private JButton startButton() {
         JButton startButton = new JButton("시작하기");
         startButton.addActionListener(event -> {
-            updatePanel(new InitLoginPanel(users, currentUser));
+            try {
+                updatePanel(new InitLoginPanel());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         return startButton;

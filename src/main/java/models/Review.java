@@ -18,7 +18,10 @@ public class Review {
     private String status;
     private String category;
 
-    public Review(String title, String userId, String userName, String time, String content, String status) {
+    public Review() {
+    }
+
+    public Review(String title, String userId, String userName, String time, String content) {
         this.title = title;
         this.userId = userId;
         this.userName = userName;

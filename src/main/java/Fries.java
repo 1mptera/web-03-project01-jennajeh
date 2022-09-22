@@ -1,8 +1,8 @@
 import models.CurrentUser;
+import models.Review;
 import models.User;
 import panels.ImagePanel;
 import panels.StartPanel;
-import utils.UserFileManager;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,12 +12,12 @@ import java.util.List;
 
 public class Fries {
     private List<User> users;
+    private List<Review> reviews;
     private CurrentUser currentUser;
 
     private JFrame frame;
     private JPanel contentPanel;
     private JPanel imagePanel;
-    private StartPanel startPanel;
 
     public static void main(String[] args) throws FileNotFoundException {
         Fries application = new Fries();
@@ -25,17 +25,21 @@ public class Fries {
     }
 
     public Fries() throws FileNotFoundException {
-        currentUser = new CurrentUser("");
-
-        UserFileManager userFileManager = new UserFileManager();
-        users = userFileManager.loadUserLists();
+//        currentUser = new CurrentUser("");
+//
+//        UserFileManager userFileManager = new UserFileManager();
+//        users = userFileManager.loadUserLists();
+//
+//        ReviewFileManager reviewFileManager = new ReviewFileManager();
+//        reviews = reviewFileManager.loadReviews();
     }
 
     public void run() {
         frame = new JFrame("Fries!");
         frame.setSize(700, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
+        // TODO: 맨 마지막에 주석 해제할 것
+        //frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
         initImagePanel();
@@ -60,10 +64,8 @@ public class Fries {
     }
 
     public void initStartPanel() {
-        startPanel = new StartPanel(users, currentUser);
-
         contentPanel.removeAll();
-        contentPanel.add(startPanel);
+        contentPanel.add(new StartPanel());
         contentPanel.setVisible(false);
         contentPanel.setVisible(true);
     }

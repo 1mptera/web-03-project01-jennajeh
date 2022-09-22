@@ -2,6 +2,7 @@ package panels;
 
 import models.CurrentUser;
 import models.User;
+import utils.UserFileManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,6 +13,7 @@ import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class InitLoginPanel extends JPanel {
@@ -23,16 +25,20 @@ public class InitLoginPanel extends JPanel {
     private JTextField passwordField;
     private JTextField idTextField;
 
-    public InitLoginPanel(List<User> users, CurrentUser currentUser) {
-        this.users = users;
-        this.currentUser = currentUser;
+    public InitLoginPanel() throws FileNotFoundException {
+        currentUser = new CurrentUser("");
 
-        this.setOpaque(false);
+        UserFileManager userFileManager = new UserFileManager();
+        users = userFileManager.loadUserLists();
 
-        this.add(loginPanel());
+//        ReviewFileManager reviewFileManager = new ReviewFileManager();
+//        reviews = reviewFileManager.loadReviews();
+
+        loginPanel();
     }
 
-    private JPanel loginPanel() {
+
+    private void loginPanel() {
         loginPanel = new JPanel();
         loginPanel.setLayout(new GridLayout(0, 1));
         loginPanel.setBackground(new Color(0, 0, 0, 122));
@@ -43,22 +49,11 @@ public class InitLoginPanel extends JPanel {
         idTextField();
         passwordLabel();
         passwordField();
+        buttonPanel();
 
-        loginPanel.add(buttonPanel());
+        this.setOpaque(false);
 
-        return loginPanel;
-    }
-
-    private JPanel buttonPanel() {
-        buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
-
-        buttonPanel.add(loginButton());
-        buttonPanel.add(signUpButton());
-        buttonPanel.add(withoutIdButton());
-        buttonPanel.add(quitButton());
-
-        return buttonPanel;
+        this.add(loginPanel);
     }
 
     private void idLabel() {
@@ -81,6 +76,18 @@ public class InitLoginPanel extends JPanel {
     private void passwordField() {
         passwordField = new JTextField(10);
         loginPanel.add(passwordField);
+    }
+
+    private void buttonPanel() {
+        buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+
+        buttonPanel.add(loginButton());
+        buttonPanel.add(signUpButton());
+        buttonPanel.add(withoutIdButton());
+        buttonPanel.add(quitButton());
+
+        loginPanel.add(buttonPanel);
     }
 
     private JButton loginButton() {
@@ -141,7 +148,7 @@ public class InitLoginPanel extends JPanel {
     private JButton signUpButton() {
         JButton signUpButton = new JButton("회원가입");
         signUpButton.addActionListener(event -> {
-            updateContentPanel(new signUpPanel(users, currentUser));
+            updateContentPanel(new signUpPanel(users));
         });
 
         return signUpButton;
