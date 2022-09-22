@@ -50,22 +50,22 @@ public class WriteReviewPanel extends JPanel {
         this.setLayout(new BorderLayout());
         this.setOpaque(false);
 
-        start();
+        initPanel();
     }
 
-    private void start() {
-        initPanel();
-        titleLabel();
-        titleField();
-        categoryLabel();
-        comboBox();
-        contentLabel();
-        textAreaPanel();
-        textArea();
-        buttonPanel();
-        addButton();
-        backButton();
-    }
+//    private void start() {
+//        initPanel();
+//        titleLabel();
+//        titleField();
+//        categoryLabel();
+//        comboBox();
+//        contentLabel();
+//        textAreaPanel();
+//        textArea();
+//        buttonPanel();
+//        addButton();
+//        backButton();
+//    }
 
     private void initPanel() {
         initPanel = new JPanel();
@@ -73,23 +73,33 @@ public class WriteReviewPanel extends JPanel {
         initPanel.setLayout(new GridLayout(5, 1));
 
         this.add(initPanel, BorderLayout.PAGE_START);
+
+        titleLabel();
     }
 
     private void titleLabel() {
         JLabel titleLabel = new JLabel("제목 : ");
         titleLabel.setForeground(Color.WHITE);
         initPanel.add(titleLabel);
+
+        titleField();
     }
 
     private void titleField() {
         titleField = new JTextField(10);
         initPanel.add(titleField);
+
+        categoryLabel();
     }
 
     private void categoryLabel() {
         JLabel categoryLabel = new JLabel("카테고리 : ");
         categoryLabel.setForeground(Color.WHITE);
         initPanel.add(categoryLabel);
+
+        comboBox();
+
+        contentLabel();
     }
 
     private void comboBox() {
@@ -116,24 +126,34 @@ public class WriteReviewPanel extends JPanel {
         JLabel contentLabel = new JLabel("내용 : ");
         contentLabel.setForeground(Color.WHITE);
         initPanel.add(contentLabel);
+
+        textAreaPanel();
     }
 
     private void textAreaPanel() {
         textAreaPanel = new JPanel();
         textAreaPanel.setOpaque(false);
         this.add(textAreaPanel);
+
+        textArea();
     }
 
     private void textArea() {
         textArea = new JTextArea(15, 20);
         textArea.setBorder(new LineBorder(Color.BLACK, 1));
         textAreaPanel.add(textArea);
+
+        buttonPanel();
     }
 
     private void buttonPanel() {
         buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
         this.add(buttonPanel, BorderLayout.SOUTH);
+
+        addButton();
+
+        backButton();
     }
 
     private void addButton() {

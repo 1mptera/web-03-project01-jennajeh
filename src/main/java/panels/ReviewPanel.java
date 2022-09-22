@@ -18,6 +18,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -50,8 +52,7 @@ public class ReviewPanel extends JPanel {
 
     private void buttonPanel() {
         buttonPanel = new JPanel();
-//        buttonPanel.setOpaque(false);
-        buttonPanel.setBackground(Color.pink);
+        buttonPanel.setOpaque(false);
         this.add(buttonPanel, BorderLayout.PAGE_START);
 
         buttonPanel.add(mainButton());
@@ -64,9 +65,7 @@ public class ReviewPanel extends JPanel {
 
     private void searchPanel() {
         searchPanel = new JPanel();
-        //searchPanel.setOpaque(false);
-        //searchPanel.setLayout(new BorderLayout());
-        searchPanel.setBackground(Color.blue);
+        searchPanel.setOpaque(false);
         this.add(searchPanel, BorderLayout.CENTER);
 
         makeComboBox();
@@ -151,8 +150,7 @@ public class ReviewPanel extends JPanel {
 
     private void contentPanel() {
         contentPanel = new JPanel();
-        contentPanel.setBackground(Color.BLACK);
-        //contentPanel.setBackground(new Color(0, 0, 0, 122));
+        contentPanel.setBackground(new Color(0, 0, 0, 122));
         contentPanel.setBorder(new LineBorder(Color.BLACK, 1));
         contentPanel.setLayout(new BorderLayout());
         contentPanel.setPreferredSize(new Dimension(550, 350));
@@ -164,12 +162,14 @@ public class ReviewPanel extends JPanel {
 
     private void guidePanel() {
         guidePanel = new JPanel();
-        guidePanel.setBackground(Color.GREEN);
+        guidePanel.setOpaque(false);
         JLabel label1 = new JLabel("제목");
+        label1.setForeground(Color.WHITE);
         label1.setPreferredSize(new Dimension(140, 15));
         guidePanel.add(label1);
 
         JLabel label2 = new JLabel("작성자");
+        label2.setForeground(Color.WHITE);
         label2.setPreferredSize(new Dimension(35, 15));
         guidePanel.add(label2);
 
@@ -181,16 +181,23 @@ public class ReviewPanel extends JPanel {
     private void reviewsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, 1));
-        panel.setBackground(Color.ORANGE);
+        panel.setBackground(new Color(255, 255, 255, 122));
         contentPanel.add(panel);
 
         for (Review review : reviews) {
             reviewLabel = new JLabel();
             reviewLabel.setHorizontalAlignment(JLabel.CENTER);
-            reviewLabel.setText(review.category() + " " + review.title() + "                           "
+            reviewLabel.setText(review.category() + " " + review.title() + "                       "
                     + review.userId());
             panel.add(reviewLabel);
         }
+
+        reviewLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateContentPanel(new displayReviewPanel(users, reviews, currentUser));
+            }
+        });
     }
 
     private void updateContentPanel(JPanel panel) {

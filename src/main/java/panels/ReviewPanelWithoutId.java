@@ -28,6 +28,7 @@ public class ReviewPanelWithoutId extends JPanel {
     private JTextField searchTextField;
     private JPanel searchPanel;
     private JPanel guidePanel;
+    private JLabel reviewLabel;
 
     public ReviewPanelWithoutId() throws FileNotFoundException {
         this.setLayout(new BorderLayout());
@@ -41,8 +42,7 @@ public class ReviewPanelWithoutId extends JPanel {
 
     private void buttonPanel() {
         buttonPanel = new JPanel();
-//        buttonPanel.setOpaque(false);
-        buttonPanel.setBackground(Color.pink);
+        buttonPanel.setOpaque(false);
         this.add(buttonPanel, BorderLayout.PAGE_START);
 
         buttonPanel.add(mainButton());
@@ -53,9 +53,7 @@ public class ReviewPanelWithoutId extends JPanel {
 
     private void searchPanel() {
         searchPanel = new JPanel();
-        //searchPanel.setOpaque(false);
-        //searchPanel.setLayout(new BorderLayout());
-        searchPanel.setBackground(Color.blue);
+        searchPanel.setOpaque(false);
         this.add(searchPanel, BorderLayout.CENTER);
 
         makeComboBox();
@@ -109,10 +107,9 @@ public class ReviewPanelWithoutId extends JPanel {
 
     private void contentPanel() {
         contentPanel = new JPanel();
-        contentPanel.setBackground(Color.BLACK);
-        //contentPanel.setBackground(new Color(0, 0, 0, 122));
+        contentPanel.setBackground(new Color(0, 0, 0, 122));
         contentPanel.setBorder(new LineBorder(Color.BLACK, 1));
-        contentPanel.setLayout(new GridLayout(0, 1));
+        contentPanel.setLayout(new BorderLayout());
         contentPanel.setPreferredSize(new Dimension(550, 350));
 
         this.add(contentPanel, BorderLayout.SOUTH);
@@ -122,13 +119,15 @@ public class ReviewPanelWithoutId extends JPanel {
 
     private void guidePanel() {
         guidePanel = new JPanel();
-        guidePanel.setBackground(Color.GREEN);
+        guidePanel.setOpaque(false);
         JLabel label1 = new JLabel("제목");
-        label1.setPreferredSize(new Dimension(200, 15));
+        label1.setForeground(Color.WHITE);
+        label1.setPreferredSize(new Dimension(140, 15));
         guidePanel.add(label1);
 
         JLabel label2 = new JLabel("작성자");
-        label2.setPreferredSize(new Dimension(50, 15));
+        label2.setForeground(Color.WHITE);
+        label2.setPreferredSize(new Dimension(35, 15));
         guidePanel.add(label2);
 
         contentPanel.add(guidePanel, BorderLayout.PAGE_START);
@@ -138,14 +137,16 @@ public class ReviewPanelWithoutId extends JPanel {
 
     private void reviewsPanel() {
         JPanel panel = new JPanel();
-        panel.setBackground(Color.ORANGE);
+        panel.setLayout(new GridLayout(0, 1));
+        panel.setBackground(new Color(255, 255, 255, 122));
         contentPanel.add(panel);
 
         for (Review review : reviews) {
-            JLabel label = new JLabel();
-            label.setText(review.category() + " " + review.title() + "                                       "
+            reviewLabel = new JLabel();
+            reviewLabel.setHorizontalAlignment(JLabel.CENTER);
+            reviewLabel.setText(review.category() + " " + review.title() + "                       "
                     + review.userId());
-            panel.add(label);
+            panel.add(reviewLabel);
         }
     }
 
