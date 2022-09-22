@@ -15,6 +15,7 @@ import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -32,6 +33,7 @@ public class ReviewPanel extends JPanel {
     private JTextField searchTextField;
     private JPanel searchPanel;
     private JPanel guidePanel;
+    private JLabel reviewLabel;
 
     public ReviewPanel(List<User> users, CurrentUser currentUser) throws FileNotFoundException {
         this.users = users;
@@ -149,10 +151,10 @@ public class ReviewPanel extends JPanel {
 
     private void contentPanel() {
         contentPanel = new JPanel();
-        contentPanel.setBackground(Color.yellow);
+        contentPanel.setBackground(Color.BLACK);
         //contentPanel.setBackground(new Color(0, 0, 0, 122));
         contentPanel.setBorder(new LineBorder(Color.BLACK, 1));
-//        contentPanel.setLayout(new GridLayout(0, 1));
+        contentPanel.setLayout(new BorderLayout());
         contentPanel.setPreferredSize(new Dimension(550, 350));
 
         this.add(contentPanel, BorderLayout.SOUTH);
@@ -162,16 +164,33 @@ public class ReviewPanel extends JPanel {
 
     private void guidePanel() {
         guidePanel = new JPanel();
-
+        guidePanel.setBackground(Color.GREEN);
         JLabel label1 = new JLabel("제목");
-        label1.setPreferredSize(new Dimension(400, 15));
+        label1.setPreferredSize(new Dimension(140, 15));
         guidePanel.add(label1);
 
         JLabel label2 = new JLabel("작성자");
-        label2.setPreferredSize(new Dimension(50, 15));
+        label2.setPreferredSize(new Dimension(35, 15));
         guidePanel.add(label2);
 
-        contentPanel.add(guidePanel);
+        contentPanel.add(guidePanel, BorderLayout.PAGE_START);
+
+        reviewsPanel();
+    }
+
+    private void reviewsPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(0, 1));
+        panel.setBackground(Color.ORANGE);
+        contentPanel.add(panel);
+
+        for (Review review : reviews) {
+            reviewLabel = new JLabel();
+            reviewLabel.setHorizontalAlignment(JLabel.CENTER);
+            reviewLabel.setText(review.category() + " " + review.title() + "                           "
+                    + review.userId());
+            panel.add(reviewLabel);
+        }
     }
 
     private void updateContentPanel(JPanel panel) {

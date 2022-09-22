@@ -151,25 +151,13 @@ public class WriteReviewPanel extends JPanel {
             Review review = new Review(category, title, id, content);
             reviews.add(review);
 
-            try {
-                ReviewFileManager reviewFileManager = new ReviewFileManager();
-
-                reviewFileManager.saveReviews(reviews);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-//              removeAll();
-//            setVisible(false);
-//            setVisible(true);
-
+            saveReview();
 
             try {
                 updateContentPanel(new ReviewPanel(users, currentUser));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
-
         });
         buttonPanel.add(addButton);
     }
@@ -184,6 +172,16 @@ public class WriteReviewPanel extends JPanel {
             }
         });
         buttonPanel.add(backButton);
+    }
+
+    private void saveReview() {
+        try {
+            ReviewFileManager reviewFileManager = new ReviewFileManager();
+
+            reviewFileManager.saveReviews(reviews);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void updateContentPanel(JPanel panel) {

@@ -1,10 +1,6 @@
 package models;
 
 public class Review {
-    private static final String DELETE = "delete";
-    private static final String CREATED = "created";
-    private static final String MODIFIED = "modified";
-
     private static final String TITLE = "제목";
     private static final String USERID = "아이디";
 
@@ -17,6 +13,7 @@ public class Review {
     private String content;
     private String status;
     private String category;
+    private String displayTime;
 
     public Review() {
     }
@@ -78,9 +75,11 @@ public class Review {
         this.status = "delete";
     }
 
-    public String displayTime() {
-        String displayTime = "";
+    public void modified() {
+        this.status = "modified";
+    }
 
+    public String displayTime() {
         String[] times = time.split("-");
 
         displayTime = times[0];

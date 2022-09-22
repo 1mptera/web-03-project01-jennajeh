@@ -2,6 +2,7 @@ package panels;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import java.io.FileNotFoundException;
 
 public class MainPanelWithoutId extends JPanel {
 
@@ -22,7 +23,11 @@ public class MainPanelWithoutId extends JPanel {
     private JButton reviewButton() {
         JButton checkListButton = new JButton("리뷰 게시판");
         checkListButton.addActionListener(event -> {
-            updatePanel(new ReviewPanelWithoutId());
+            try {
+                updatePanel(new ReviewPanelWithoutId());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         return checkListButton;
