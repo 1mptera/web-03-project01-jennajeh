@@ -1,7 +1,9 @@
 package panels;
 
+import models.CurrentUser;
 import models.Review;
 import models.User;
+import utils.ReviewFileManager;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,6 +23,8 @@ import java.util.List;
 public class ReviewPanel extends JPanel {
     private List<User> users;
     private List<Review> reviews;
+    private CurrentUser currentUser;
+    private ReviewFileManager reviewFileManager;
 
     String choice = "";
 
@@ -32,9 +36,13 @@ public class ReviewPanel extends JPanel {
     private JPanel listsPanel;
     private JPanel underPanel;
 
-    public ReviewPanel(List<User> users, List<Review> reviews) {
+    public ReviewPanel(List<User> users, CurrentUser currentUser) throws FileNotFoundException {
         this.users = users;
-        this.reviews = reviews;
+        this.currentUser = currentUser;
+
+        reviewFileManager = new ReviewFileManager();
+
+        reviews = reviewFileManager.loadReviews();
 
         initButtonPanel();
 
@@ -60,7 +68,7 @@ public class ReviewPanel extends JPanel {
     private JButton mainButton() {
         JButton mainButton = new JButton("메인 화면");
         mainButton.addActionListener(event -> {
-            updateContentPanel(new MainPanel(users));
+            updateContentPanel(new MainPanel(users, currentUser));
         });
 
         return mainButton;
@@ -70,7 +78,7 @@ public class ReviewPanel extends JPanel {
         JButton checkListButton = new JButton("체크 리스트");
         checkListButton.addActionListener(event -> {
             try {
-                updateContentPanel(new CheckListPanel(users));
+                updateContentPanel(new CheckListPanel(users, currentUser));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -82,7 +90,7 @@ public class ReviewPanel extends JPanel {
     private JButton createReviewButton() {
         JButton createReviewButton = new JButton("글쓰기");
         createReviewButton.addActionListener(event -> {
-            updateContentPanel(new WriteReviewPanel(users, reviews));
+            updateContentPanel(new WriteReviewPanel(users, reviews, currentUser, reviewFileManager));
         });
         return createReviewButton;
     }
@@ -94,7 +102,9 @@ public class ReviewPanel extends JPanel {
 
             JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
-            updateContentPanel(new InitLoginPanel(users));
+            currentUser.logout();
+
+            updateContentPanel(new InitLoginPanel(users, currentUser));
         });
 
         return logoutButton;

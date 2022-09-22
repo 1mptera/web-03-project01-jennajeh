@@ -20,9 +20,9 @@ class ReviewTest {
 
     @Test
     void csvRow() {
-        Review review = new Review("제목", "작성자아이디", "작성자이름", "날짜", "내용", "0");
+        Review review = new Review("카테고리", "제목", "아이디", "내용");
 
-        assertEquals("제목,작성자아이디,작성자이름,날짜,내용,created", review.toCsvRow());
+        assertEquals("카테고리,제목,아이디,내용", review.toCsvRow());
     }
 
     @Test

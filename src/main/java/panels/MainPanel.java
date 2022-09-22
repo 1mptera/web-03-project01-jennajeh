@@ -1,5 +1,6 @@
 package panels;
 
+import models.CurrentUser;
 import models.Review;
 import models.User;
 
@@ -12,9 +13,11 @@ import java.util.List;
 public class MainPanel extends JPanel {
     private List<User> users;
     private List<Review> reviews;
+    private CurrentUser currentUser;
 
-    public MainPanel(List<User> users) {
+    public MainPanel(List<User> users, CurrentUser currentUser) {
         this.users = users;
+        this.currentUser = currentUser;
 
         initButtonPanel();
     }
@@ -34,7 +37,7 @@ public class MainPanel extends JPanel {
         JButton checkListButton = new JButton("체크 리스트");
         checkListButton.addActionListener(event -> {
             try {
-                updatePanel(new CheckListPanel(users));
+                updatePanel(new CheckListPanel(users, currentUser));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -46,7 +49,11 @@ public class MainPanel extends JPanel {
     private JButton reviewButton() {
         JButton checkListButton = new JButton("리뷰 게시판");
         checkListButton.addActionListener(event -> {
-            updatePanel(new ReviewPanel(users, reviews));
+            try {
+                updatePanel(new ReviewPanel(users, currentUser));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         return checkListButton;
@@ -59,7 +66,9 @@ public class MainPanel extends JPanel {
 
             JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
-            updatePanel(new InitLoginPanel(users));
+            currentUser.logout();
+
+            updatePanel(new InitLoginPanel(users, currentUser));
         });
 
         return checkListButton;

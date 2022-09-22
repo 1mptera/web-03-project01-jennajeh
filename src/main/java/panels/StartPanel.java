@@ -1,5 +1,6 @@
 package panels;
 
+import models.CurrentUser;
 import models.User;
 
 import javax.swing.JButton;
@@ -8,11 +9,12 @@ import java.awt.BorderLayout;
 import java.util.List;
 
 public class StartPanel extends JPanel {
-    private JPanel contentPanel;
     private List<User> users;
+    private CurrentUser currentUser;
 
-    public StartPanel(List<User> users) {
+    public StartPanel(List<User> users, CurrentUser currentUser) {
         this.users = users;
+        this.currentUser = currentUser;
 
         initButtonPanel();
     }
@@ -30,7 +32,7 @@ public class StartPanel extends JPanel {
     private JButton startButton() {
         JButton startButton = new JButton("시작하기");
         startButton.addActionListener(event -> {
-            updatePanel(new InitLoginPanel(users));
+            updatePanel(new InitLoginPanel(users, currentUser));
         });
 
         return startButton;

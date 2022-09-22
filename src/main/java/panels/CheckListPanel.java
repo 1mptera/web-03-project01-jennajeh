@@ -3,6 +3,7 @@ package panels;
 import models.CheckList;
 import models.Cities;
 import models.City;
+import models.CurrentUser;
 import models.User;
 import utils.CheckListFileManager;
 
@@ -25,11 +26,12 @@ import java.util.List;
 
 public class CheckListPanel extends JPanel {
     private CheckListFileManager checkListFileManager;
+    private CurrentUser currentUser;
+    private List<CheckList> checkLists;
+    private List<User> users;
 
     private String data = "";
     private String text = "";
-    private List<CheckList> checkLists;
-    private List<User> users;
 
     private JTextField textField;
     private JPanel buttonPanel;
@@ -39,8 +41,9 @@ public class CheckListPanel extends JPanel {
     private JPanel fieldPanel;
     private JPanel initListsPanel;
 
-    public CheckListPanel(List<User> users) throws FileNotFoundException {
+    public CheckListPanel(List<User> users, CurrentUser currentUser) throws FileNotFoundException {
         this.users = users;
+        this.currentUser = currentUser;
 
         initWholePanel();
 
@@ -51,7 +54,6 @@ public class CheckListPanel extends JPanel {
         inputPanel();
 
         checkListFileManager = new CheckListFileManager();
-
         checkLists = checkListFileManager.loadCheckList();
 
         initListsPanel(new CheckListDetailPanel(checkLists));
@@ -81,7 +83,7 @@ public class CheckListPanel extends JPanel {
     private JButton mainButton() {
         JButton mainButton = new JButton("메인 화면");
         mainButton.addActionListener(event -> {
-            updateContentPanel(new MainPanel(users));
+            updateContentPanel(new MainPanel(users, currentUser));
         });
 
         return mainButton;
@@ -94,7 +96,9 @@ public class CheckListPanel extends JPanel {
 
             JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
-            updateContentPanel(new InitLoginPanel(users));
+            currentUser.logout();
+
+            updateContentPanel(new InitLoginPanel(users, currentUser));
         });
 
         return logoutButton;

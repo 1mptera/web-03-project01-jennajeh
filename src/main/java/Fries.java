@@ -1,3 +1,4 @@
+import models.CurrentUser;
 import models.User;
 import panels.ImagePanel;
 import panels.StartPanel;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class Fries {
     private List<User> users;
+    private CurrentUser currentUser;
 
     private JFrame frame;
     private JPanel contentPanel;
@@ -23,8 +25,9 @@ public class Fries {
     }
 
     public Fries() throws FileNotFoundException {
-        UserFileManager userFileManager = new UserFileManager();
+        currentUser = new CurrentUser("");
 
+        UserFileManager userFileManager = new UserFileManager();
         users = userFileManager.loadUserLists();
     }
 
@@ -57,7 +60,7 @@ public class Fries {
     }
 
     public void initStartPanel() {
-        startPanel = new StartPanel(users);
+        startPanel = new StartPanel(users, currentUser);
 
         contentPanel.removeAll();
         contentPanel.add(startPanel);

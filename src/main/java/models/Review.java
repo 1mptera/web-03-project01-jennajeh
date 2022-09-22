@@ -16,6 +16,7 @@ public class Review {
     private String time;
     private String content;
     private String status;
+    private String category;
 
     public Review(String title, String userId, String userName, String time, String content, String status) {
         this.title = title;
@@ -26,9 +27,11 @@ public class Review {
         this.status = "created";
     }
 
-    public Review(String title, String userId) {
+    public Review(String category, String title, String userId, String content) {
+        this.category = category;
         this.title = title;
         this.userId = userId;
+        this.content = content;
     }
 
     public String title() {
@@ -55,8 +58,12 @@ public class Review {
         return status;
     }
 
+    public String category() {
+        return category;
+    }
+
     public String toCsvRow() {
-        return title + "," + userId + "," + userName + "," + time + "," + content + "," + status;
+        return category + "," + title + "," + userId + "," + content;
     }
 
     public void updateContent(String content) {

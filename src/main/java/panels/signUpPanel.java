@@ -1,5 +1,6 @@
 package panels;
 
+import models.CurrentUser;
 import models.User;
 import utils.UserFileManager;
 
@@ -21,6 +22,8 @@ import java.util.List;
 
 public class signUpPanel extends JPanel {
     private List<User> users;
+    private CurrentUser currentUser;
+
     String female = "";
     String male = "";
 
@@ -30,7 +33,7 @@ public class signUpPanel extends JPanel {
     private JTextField passwordField;
     private JTextField nameField;
 
-    public signUpPanel(List<User> users) {
+    public signUpPanel(List<User> users, CurrentUser currentUser) {
         this.users = users;
 
         this.setOpaque(false);
@@ -177,7 +180,7 @@ public class signUpPanel extends JPanel {
                 optionPane.showMessageDialog(null, "중복된 아이디 입니다. 다시 입력해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
                 return;
             }
-            
+
             User user = new User(id, password, name, gender);
 
             users.add(user);
@@ -188,7 +191,7 @@ public class signUpPanel extends JPanel {
                 throw new RuntimeException(e);
             }
 
-            updatePanel(new InitLoginPanel(users));
+            updatePanel(new InitLoginPanel(users, currentUser));
 
         });
 

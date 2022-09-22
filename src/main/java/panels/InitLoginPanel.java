@@ -1,5 +1,6 @@
 package panels;
 
+import models.CurrentUser;
 import models.User;
 
 import javax.swing.BorderFactory;
@@ -15,14 +16,16 @@ import java.util.List;
 
 public class InitLoginPanel extends JPanel {
     private List<User> users;
+    private CurrentUser currentUser;
 
     private JPanel loginPanel;
     private JPanel buttonPanel;
     private JTextField passwordField;
     private JTextField idTextField;
 
-    public InitLoginPanel(List<User> users) {
+    public InitLoginPanel(List<User> users, CurrentUser currentUser) {
         this.users = users;
+        this.currentUser = currentUser;
 
         this.setOpaque(false);
 
@@ -103,9 +106,9 @@ public class InitLoginPanel extends JPanel {
             if (id.length() != 0 && password.length() != 0) {
                 for (User user : users) {
                     if (id.equals(user.userId()) && password.equals(user.password())) {
-                        user.login();
+                        currentUser.login(idTextField.getText());
 
-                        updateContentPanel(new MainPanel(users));
+                        updateContentPanel(new MainPanel(users, currentUser));
 
                         return;
                     }
@@ -138,7 +141,7 @@ public class InitLoginPanel extends JPanel {
     private JButton signUpButton() {
         JButton signUpButton = new JButton("회원가입");
         signUpButton.addActionListener(event -> {
-            updateContentPanel(new signUpPanel(users));
+            updateContentPanel(new signUpPanel(users, currentUser));
         });
 
         return signUpButton;

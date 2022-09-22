@@ -2,8 +2,10 @@ package panels;
 
 import models.Cities;
 import models.City;
+import models.CurrentUser;
 import models.Review;
 import models.User;
+import utils.ReviewFileManager;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,21 +19,35 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WriteReviewPanel extends JPanel {
     private List<User> users;
     private List<Review> reviews;
-    private JPanel initPanel;
+    private CurrentUser currentUser;
 
-    private String data = "";
+    private String categoryData = "";
+    String title = "";
+    String category = "";
+    String content = "";
+    String id = "";
+
+    private JPanel initPanel;
     private JPanel textAreaPanel;
     private JPanel buttonPanel;
+    private JTextField titleField;
+    private JComboBox comboBox;
+    private JTextArea textArea;
+    private ReviewFileManager reviewFileManager;
 
-    public WriteReviewPanel(List<User> users, List<Review> reviews) {
+    public WriteReviewPanel(List<User> users, List<Review> reviews, CurrentUser currentUser, ReviewFileManager reviewFileManager) {
         this.users = users;
         this.reviews = reviews;
+        this.currentUser = currentUser;
+        this.reviewFileManager = reviewFileManager;
 
         this.setLayout(new BorderLayout());
         this.setOpaque(false);
@@ -67,7 +83,7 @@ public class WriteReviewPanel extends JPanel {
     }
 
     private void titleField() {
-        JTextField titleField = new JTextField(10);
+        titleField = new JTextField(10);
         initPanel.add(titleField);
     }
 
@@ -80,7 +96,7 @@ public class WriteReviewPanel extends JPanel {
     private void comboBox() {
         List<City> cities = new ArrayList<>(Cities.CITIES);
 
-        JComboBox comboBox = new JComboBox();
+        comboBox = new JComboBox();
 
         for (int i = 0; i < cities.size(); i += 1) {
             comboBox.addItem(cities.get(i).toString());
@@ -90,7 +106,7 @@ public class WriteReviewPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource();
-                data = "[" + cb.getItemAt(cb.getSelectedIndex()) + "]";
+                categoryData = "[" + cb.getItemAt(cb.getSelectedIndex()) + "]";
             }
         });
 
@@ -110,7 +126,7 @@ public class WriteReviewPanel extends JPanel {
     }
 
     private void textArea() {
-        JTextArea textArea = new JTextArea(15, 20);
+        textArea = new JTextArea(15, 20);
         textArea.setBorder(new LineBorder(Color.BLACK, 1));
         textAreaPanel.add(textArea);
     }
@@ -124,8 +140,39 @@ public class WriteReviewPanel extends JPanel {
     private void button() {
         JButton button = new JButton("등록");
         button.addActionListener(event -> {
-            
+            category = categoryData;
+            title = titleField.getText();
+            id = currentUser.id();
+            content = textArea.getText();
+
+            if (content.isBlank()) {
+                return;
+            }
+
+            Review review = new Review(category, title, id, content);
+            reviews.add(review);
+
+            try {
+                reviewFileManager.saveReviews(reviews);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                updateContentPanel(new ReviewPanel(users, currentUser));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
         });
         buttonPanel.add(button);
+    }
+
+    private void updateContentPanel(JPanel panel) {
+        this.removeAll();
+        this.add(panel);
+
+        this.setVisible(false);
+        this.setVisible(true);
     }
 }
