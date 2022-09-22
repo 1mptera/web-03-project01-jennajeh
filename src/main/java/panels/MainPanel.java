@@ -1,5 +1,6 @@
 package panels;
 
+import models.Review;
 import models.User;
 
 import javax.swing.JButton;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class MainPanel extends JPanel {
     private List<User> users;
+    private List<Review> reviews;
 
     public MainPanel(List<User> users) {
         this.users = users;
@@ -44,7 +46,7 @@ public class MainPanel extends JPanel {
     private JButton reviewButton() {
         JButton checkListButton = new JButton("리뷰 게시판");
         checkListButton.addActionListener(event -> {
-            updatePanel(new ReviewPanel(users));
+            updatePanel(new ReviewPanel(users, reviews));
         });
 
         return checkListButton;

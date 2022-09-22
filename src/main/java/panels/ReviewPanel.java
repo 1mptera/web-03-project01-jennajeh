@@ -20,6 +20,8 @@ import java.util.List;
 
 public class ReviewPanel extends JPanel {
     private List<User> users;
+    private List<Review> reviews;
+
     String choice = "";
 
     private JPanel buttonPanel;
@@ -30,8 +32,9 @@ public class ReviewPanel extends JPanel {
     private JPanel listsPanel;
     private JPanel underPanel;
 
-    public ReviewPanel(List<User> users) {
+    public ReviewPanel(List<User> users, List<Review> reviews) {
         this.users = users;
+        this.reviews = reviews;
 
         initButtonPanel();
 
@@ -79,18 +82,7 @@ public class ReviewPanel extends JPanel {
     private JButton createReviewButton() {
         JButton createReviewButton = new JButton("글쓰기");
         createReviewButton.addActionListener(event -> {
-            // TODO: 나중에 프레임 창 띄워서 글 쓰기 생성하기
-            //WriteFrame writeFrame = new WriteFrame();
-            Review review = new Review("서브웨이 성수점", "hello");
-
-            JLabel title = new JLabel(review.title());
-            JLabel id = new JLabel(review.userId());
-
-            listsPanel.add(title);
-            listsPanel.add(id);
-
-            test();
-
+            updateContentPanel(new WriteReviewPanel(users, reviews));
         });
         return createReviewButton;
     }
