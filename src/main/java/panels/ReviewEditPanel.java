@@ -103,7 +103,7 @@ public class ReviewEditPanel extends JPanel {
     private void titleField() {
         titleField = new JTextField(10);
 
-        titleField.setText(reviews.get(0).title());
+        titleField.setText(review.title());
 
         initPanel.add(titleField);
 
@@ -130,7 +130,7 @@ public class ReviewEditPanel extends JPanel {
         textArea = new JTextArea(15, 20);
         textArea.setBorder(new LineBorder(Color.BLACK, 1));
 
-        textArea.setText(reviews.get(0).content());
+        textArea.setText(review.content());
 
         textAreaPanel.add(textArea);
 
