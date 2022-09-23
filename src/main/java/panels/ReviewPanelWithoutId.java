@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,13 +19,9 @@ import java.util.List;
 
 public class ReviewPanelWithoutId extends JPanel {
     private List<Review> reviews;
-    String choice = "";
 
     private JPanel buttonPanel;
     private JPanel contentPanel;
-    private JButton searchButton;
-    private JTextField searchTextField;
-    private JPanel searchPanel;
     private JPanel guidePanel;
     private JLabel reviewLabel;
 
@@ -73,7 +68,7 @@ public class ReviewPanelWithoutId extends JPanel {
         contentPanel = new JPanel();
         contentPanel.setBackground(new Color(0, 0, 0, 122));
         contentPanel.setBorder(new LineBorder(Color.BLACK, 1));
-        contentPanel.setLayout(new BorderLayout());
+        contentPanel.setLayout(new GridLayout(0, 1));
         contentPanel.setPreferredSize(new Dimension(550, 350));
 
         this.add(contentPanel, BorderLayout.SOUTH);
@@ -100,15 +95,15 @@ public class ReviewPanelWithoutId extends JPanel {
     }
 
     private void reviewsPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(0, 1));
-        panel.setBackground(new Color(255, 255, 255, 122));
-        contentPanel.add(panel);
-
         for (Review review : reviews) {
             if (review.status().equals("delete")) {
                 continue;
             }
+
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(255, 255, 255, 122));
+            panel.setBorder(new LineBorder(Color.BLACK, 1));
+            contentPanel.add(panel);
 
             reviewLabel = new JLabel();
             reviewLabel.setHorizontalAlignment(JLabel.CENTER);
