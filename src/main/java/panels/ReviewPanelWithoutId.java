@@ -6,6 +6,7 @@ import utils.ReviewFileManager;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -15,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -142,11 +145,25 @@ public class ReviewPanelWithoutId extends JPanel {
         contentPanel.add(panel);
 
         for (Review review : reviews) {
+            if (review.status().equals("delete")) {
+                continue;
+            }
+            
             reviewLabel = new JLabel();
             reviewLabel.setHorizontalAlignment(JLabel.CENTER);
             reviewLabel.setText(review.category() + " " + review.title() + "                       "
                     + review.userId());
             panel.add(reviewLabel);
+
+            reviewLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    JOptionPane optionPane = new JOptionPane();
+
+                    optionPane.showMessageDialog(null, "회원만 조회 가능합니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+            });
         }
     }
 

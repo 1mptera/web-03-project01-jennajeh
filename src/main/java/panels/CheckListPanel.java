@@ -108,7 +108,7 @@ public class CheckListPanel extends JPanel {
         contentPanel.setLayout(new GridLayout(0, 1));
         contentPanel.setOpaque(false);
 
-        JLabel label = new JLabel("체크리스트 관리");
+        JLabel label = new JLabel("위시리스트 관리");
         label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(JLabel.CENTER);
 
