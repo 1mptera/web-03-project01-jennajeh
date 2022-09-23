@@ -55,7 +55,7 @@ public class Review {
     }
 
     public String toCsvRow() {
-        return category + "," + title + "," + userId + "," + content;
+        return category + "," + title + "," + userId + "," + content + "," + status;
     }
 
     public void updateContent(String category, String title, String userId, String content) {

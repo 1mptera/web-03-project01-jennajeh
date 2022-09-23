@@ -54,12 +54,6 @@ public class ReviewEditPanel extends JPanel {
     }
 
     private void initPanel() {
-        for (Review review : reviews) {
-            if (review.status().equals("delete")) {
-                continue;
-            }
-        }
-
         initPanel = new JPanel();
         initPanel.setBackground(new Color(255, 255, 255, 122));
         initPanel.setLayout(new GridLayout(5, 1));
@@ -183,6 +177,7 @@ public class ReviewEditPanel extends JPanel {
                 }
             }
         });
+
         buttonPanel.add(editButton);
     }
 

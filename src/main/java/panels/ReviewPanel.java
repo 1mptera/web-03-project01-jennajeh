@@ -62,7 +62,9 @@ public class ReviewPanel extends JPanel {
         ReviewFileManager reviewFileManager = new ReviewFileManager();
         reviews = reviewFileManager.loadReviews();
 
+
         buttonPanel(reviews);
+
     }
 
     private void buttonPanel(List<Review> reviews) {
@@ -121,6 +123,7 @@ public class ReviewPanel extends JPanel {
         createReviewButton.addActionListener(event -> {
             updateContentPanel(new WriteReviewPanel(users, reviews, currentUser));
         });
+
         return createReviewButton;
     }
 
@@ -167,7 +170,7 @@ public class ReviewPanel extends JPanel {
         contentPanel = new JPanel();
         contentPanel.setBackground(new Color(0, 0, 0, 122));
         contentPanel.setBorder(new LineBorder(Color.BLACK, 1));
-        contentPanel.setLayout(new BorderLayout());
+        contentPanel.setLayout(new GridLayout(0, 1));
         contentPanel.setPreferredSize(new Dimension(550, 350));
 
         this.add(contentPanel, BorderLayout.SOUTH);
@@ -194,12 +197,14 @@ public class ReviewPanel extends JPanel {
     }
 
     private void reviewsPanel() {
-        reviewsPanel = new JPanel();
-        reviewsPanel.setLayout(new GridLayout(0, 1));
-        reviewsPanel.setBackground(new Color(255, 255, 255, 122));
-        contentPanel.add(reviewsPanel);
-
         for (Review review : reviews) {
+            if (review.status().equals("delete")) {
+                continue;
+            }
+            reviewsPanel = new JPanel();
+            reviewsPanel.setBackground(new Color(255, 255, 255, 122));
+            contentPanel.add(reviewsPanel);
+
             reviewLabel = new JLabel();
             reviewLabel.setHorizontalAlignment(JLabel.CENTER);
             reviewLabel.setText(review.category() + " " + review.title() + "                       "

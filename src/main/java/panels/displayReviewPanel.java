@@ -125,6 +125,14 @@ public class displayReviewPanel extends JPanel {
     private void deleteButton() {
         JButton deleteButton = new JButton("삭제");
         deleteButton.addActionListener(event -> {
+            if (!currentUser.id().equals(review.userId())) {
+                JOptionPane optionPane = new JOptionPane();
+
+                optionPane.showMessageDialog(null, "작성자만 삭제할 수 있습니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+
+                return;
+            }
+
             review.delete();
 
             saveReview();
@@ -148,7 +156,7 @@ public class displayReviewPanel extends JPanel {
 
                 return;
             }
-            
+
             updateContentPanel(new ReviewEditPanel(review, reviews, currentUser));
         });
         buttonPanel.add(editButton);
@@ -167,6 +175,13 @@ public class displayReviewPanel extends JPanel {
     private void updateContentPanel(JPanel panel) {
         this.removeAll();
         this.add(panel);
+        this.setVisible(false);
+        this.setVisible(true);
+    }
+
+    private void updateDisplay() {
+        this.removeAll();
+        this.initPanel();
         this.setVisible(false);
         this.setVisible(true);
     }
