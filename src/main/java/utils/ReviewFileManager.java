@@ -32,7 +32,9 @@ public class ReviewFileManager {
     private Review parseReviews(String line) {
         String[] words = line.split(",");
 
-        return new Review(words[0], words[1], words[2], words[3]);
+        long amount = Long.parseLong(words[5]);
+
+        return new Review(words[0], words[1], words[2], words[3], amount, words[4]);
     }
 
     public void saveReviews(List<Review> reviews) throws IOException {

@@ -4,8 +4,8 @@ import models.Review;
 import utils.ReviewFileManager;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -13,8 +13,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -48,43 +48,7 @@ public class ReviewPanelWithoutId extends JPanel {
         buttonPanel.add(mainButton());
         buttonPanel.add(quitButton());
 
-        searchPanel();
-    }
-
-    private void searchPanel() {
-        searchPanel = new JPanel();
-        searchPanel.setOpaque(false);
-        this.add(searchPanel, BorderLayout.CENTER);
-
-        makeComboBox();
-
-        searchTextField = new JTextField(10);
-        searchPanel.add(searchTextField);
-
-        searchButton = new JButton("검색");
-        searchPanel.add(searchButton);
-
         contentPanel();
-    }
-
-    private void makeComboBox() {
-        String[] category = {"제목", "작성자"};
-
-        JComboBox comboBox = new JComboBox();
-
-        for (int i = 0; i < category.length; i += 1) {
-            comboBox.addItem(category[i].toString());
-        }
-
-        comboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox) e.getSource();
-                choice = (String) cb.getItemAt(cb.getSelectedIndex());
-            }
-        });
-
-        searchPanel.add(comboBox);
     }
 
     private JButton mainButton() {
@@ -142,11 +106,25 @@ public class ReviewPanelWithoutId extends JPanel {
         contentPanel.add(panel);
 
         for (Review review : reviews) {
+            if (review.status().equals("delete")) {
+                continue;
+            }
+
             reviewLabel = new JLabel();
             reviewLabel.setHorizontalAlignment(JLabel.CENTER);
             reviewLabel.setText(review.category() + " " + review.title() + "                       "
                     + review.userId());
             panel.add(reviewLabel);
+
+            reviewLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    JOptionPane optionPane = new JOptionPane();
+
+                    optionPane.showMessageDialog(null, "회원만 조회 가능합니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+            });
         }
     }
 

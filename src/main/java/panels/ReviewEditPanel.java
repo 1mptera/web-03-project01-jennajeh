@@ -41,6 +41,7 @@ public class ReviewEditPanel extends JPanel {
     private String category = "";
     private String content = "";
     private String id = "";
+    private long idNumber = 0;
 
     public ReviewEditPanel(Review review, List<Review> reviews, CurrentUser currentUser) {
         this.review = review;
@@ -102,7 +103,7 @@ public class ReviewEditPanel extends JPanel {
     private void titleField() {
         titleField = new JTextField(10);
 
-        titleField.setText(reviews.get(0).title());
+        titleField.setText(review.title());
 
         initPanel.add(titleField);
 
@@ -129,7 +130,7 @@ public class ReviewEditPanel extends JPanel {
         textArea = new JTextArea(15, 20);
         textArea.setBorder(new LineBorder(Color.BLACK, 1));
 
-        textArea.setText(reviews.get(0).content());
+        textArea.setText(review.content());
 
         textAreaPanel.add(textArea);
 

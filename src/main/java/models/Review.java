@@ -6,20 +6,21 @@ public class Review {
 
     private String title;
     private String userId;
-    private String userName;
     private String content;
     private String status;
     private String category;
+    private long idNumber;
 
     public Review() {
     }
 
-    public Review(String category, String title, String userId, String content) {
+    public Review(String category, String title, String userId, String content, long idNumber, String status) {
         this.category = category;
         this.title = title;
         this.userId = userId;
         this.content = content;
-        this.status = "created";
+        this.idNumber = idNumber;
+        this.status = status;
     }
 
     public Review(String category, String title, String userId, String content, String status) {
@@ -38,10 +39,6 @@ public class Review {
         return userId;
     }
 
-    public String userName() {
-        return userName;
-    }
-
     public String content() {
         return content;
     }
@@ -54,8 +51,12 @@ public class Review {
         return category;
     }
 
+    public long idNumber() {
+        return idNumber;
+    }
+
     public String toCsvRow() {
-        return category + "," + title + "," + userId + "," + content + "," + status;
+        return category + "," + title + "," + userId + "," + content + "," + status + "," + idNumber;
     }
 
     public void updateContent(String category, String title, String userId, String content) {

@@ -41,6 +41,8 @@ public class WriteReviewPanel extends JPanel {
     private JTextField titleField;
     private JComboBox comboBox;
     private JTextArea textArea;
+    private long idNumber = 0;
+    private String status;
 
     public WriteReviewPanel(List<User> users, List<Review> reviews, CurrentUser currentUser) {
         this.users = users;
@@ -79,7 +81,7 @@ public class WriteReviewPanel extends JPanel {
     }
 
     private void categoryLabel() {
-        JLabel categoryLabel = new JLabel("카테고리 : ");
+        JLabel categoryLabel = new JLabel("도시 : ");
         categoryLabel.setForeground(Color.WHITE);
         initPanel.add(categoryLabel);
 
@@ -149,12 +151,14 @@ public class WriteReviewPanel extends JPanel {
             title = titleField.getText();
             id = currentUser.id();
             content = textArea.getText();
+            idNumber = reviews.size();
+            status = "created";
 
             if (content.isBlank()) {
                 return;
             }
 
-            Review review = new Review(category, title, id, content);
+            Review review = new Review(category, title, id, content, idNumber, status);
             reviews.add(review);
 
             saveReview();

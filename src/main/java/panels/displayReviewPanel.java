@@ -7,7 +7,6 @@ import utils.ReviewFileManager;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -65,8 +64,7 @@ public class displayReviewPanel extends JPanel {
         titleField = new JTextField(10);
         titleField.setEditable(false);
 
-        titleField.setText(reviews.get(0).category() + " " + reviews.get(0).title());
-
+        titleField.setText(review.category() + " " + review.title());
         initPanel.add(titleField);
 
         contentLabel();
@@ -93,7 +91,7 @@ public class displayReviewPanel extends JPanel {
         textArea.setEditable(false);
         textArea.setBorder(new LineBorder(Color.BLACK, 1));
 
-        textArea.setText(reviews.get(0).content());
+        textArea.setText(review.content());
 
         textAreaPanel.add(textArea);
 
@@ -123,19 +121,16 @@ public class displayReviewPanel extends JPanel {
     }
 
     private void deleteButton() {
+        if (!currentUser.id().equals(review.userId())) {
+            return;
+        }
+        ReviewFileManager reviewFileManager = new ReviewFileManager();
+
         JButton deleteButton = new JButton("삭제");
         deleteButton.addActionListener(event -> {
-            if (!currentUser.id().equals(review.userId())) {
-                JOptionPane optionPane = new JOptionPane();
-
-                optionPane.showMessageDialog(null, "작성자만 삭제할 수 있습니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
-
-                return;
-            }
-
             review.delete();
 
-            saveReview();
+            saveReview(reviewFileManager);
 
             try {
                 updateContentPanel(new ReviewPanel(users, currentUser));
@@ -147,25 +142,19 @@ public class displayReviewPanel extends JPanel {
     }
 
     private void editButton() {
+        if (!currentUser.id().equals(review.userId())) {
+            return;
+        }
+
         JButton editButton = new JButton("수정");
         editButton.addActionListener(event -> {
-            if (!currentUser.id().equals(review.userId())) {
-                JOptionPane optionPane = new JOptionPane();
-
-                optionPane.showMessageDialog(null, "작성자만 수정할 수 있습니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
-
-                return;
-            }
-
             updateContentPanel(new ReviewEditPanel(review, reviews, currentUser));
         });
         buttonPanel.add(editButton);
     }
 
-    private void saveReview() {
+    private void saveReview(ReviewFileManager reviewFileManager) {
         try {
-            ReviewFileManager reviewFileManager = new ReviewFileManager();
-
             reviewFileManager.saveReviews(reviews);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -175,13 +164,6 @@ public class displayReviewPanel extends JPanel {
     private void updateContentPanel(JPanel panel) {
         this.removeAll();
         this.add(panel);
-        this.setVisible(false);
-        this.setVisible(true);
-    }
-
-    private void updateDisplay() {
-        this.removeAll();
-        this.initPanel();
         this.setVisible(false);
         this.setVisible(true);
     }
