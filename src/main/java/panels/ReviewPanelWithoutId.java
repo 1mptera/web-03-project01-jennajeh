@@ -1,5 +1,8 @@
 package panels;
 
+import models.Review;
+import utils.ReviewFileManager;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -9,74 +12,49 @@ import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 public class ReviewPanelWithoutId extends JPanel {
-    private String choice = "";
+    private List<Review> reviews;
+    String choice = "";
 
     private JPanel buttonPanel;
     private JPanel contentPanel;
     private JButton searchButton;
     private JTextField searchTextField;
     private JPanel searchPanel;
-    private JPanel listsPanel;
-    private JPanel underPanel;
+    private JPanel guidePanel;
+    private JLabel reviewLabel;
 
-    public ReviewPanelWithoutId() {
-        initButtonPanel();
+    public ReviewPanelWithoutId() throws FileNotFoundException {
+        this.setLayout(new BorderLayout());
+        this.setOpaque(false);
 
-        initContentPanel();
+        ReviewFileManager reviewFileManager = new ReviewFileManager();
+        reviews = reviewFileManager.loadReviews();
 
-        listsPanel();
+        buttonPanel();
     }
 
-    private void initButtonPanel() {
+    private void buttonPanel() {
         buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
+        this.add(buttonPanel, BorderLayout.PAGE_START);
 
         buttonPanel.add(mainButton());
         buttonPanel.add(quitButton());
 
-        this.setLayout(new BorderLayout());
-        this.setOpaque(false);
-        this.add(buttonPanel, BorderLayout.PAGE_START);
+        searchPanel();
     }
 
-    private JButton mainButton() {
-        JButton mainButton = new JButton("메인 화면");
-        mainButton.addActionListener(event -> {
-            updateContentPanel(new MainPanelWithoutId());
-        });
-
-        return mainButton;
-    }
-
-    private JButton quitButton() {
-        JButton signUpButton = new JButton("종료하기");
-        signUpButton.addActionListener(event -> {
-            System.exit(0);
-        });
-
-        return signUpButton;
-    }
-
-    private void initContentPanel() {
-        contentPanel = new JPanel();
-
-        contentPanel.setBackground(new Color(0, 0, 0, 122));
-        contentPanel.setLayout(new BorderLayout());
-        contentPanel.setPreferredSize(new Dimension(620, 400));
-
-        contentPanel.add(searchPanel(), BorderLayout.PAGE_START);
-        contentPanel.add(underPanel(), BorderLayout.PAGE_END);
-        this.add(contentPanel);
-    }
-
-    private JPanel searchPanel() {
+    private void searchPanel() {
         searchPanel = new JPanel();
-        searchPanel.setLayout(new BorderLayout());
         searchPanel.setOpaque(false);
+        this.add(searchPanel, BorderLayout.CENTER);
 
         makeComboBox();
 
@@ -86,7 +64,7 @@ public class ReviewPanelWithoutId extends JPanel {
         searchButton = new JButton("검색");
         searchPanel.add(searchButton);
 
-        return searchPanel;
+        contentPanel();
     }
 
     private void makeComboBox() {
@@ -109,78 +87,72 @@ public class ReviewPanelWithoutId extends JPanel {
         searchPanel.add(comboBox);
     }
 
-    private void listsPanel() {
-        listsPanel = new JPanel();
-        listsPanel.setOpaque(false);
-        // TODO: GridLayout 사이즈 나중에 바꿔야함.
-        listsPanel.setLayout(new BorderLayout());
-        listsPanel.setBorder(new LineBorder(Color.BLACK, 1));
-        listsPanel.setPreferredSize(new Dimension(550, 300));
-        contentPanel.add(listsPanel, BorderLayout.PAGE_START);
+    private JButton mainButton() {
+        JButton mainButton = new JButton("메인 화면");
+        mainButton.addActionListener(event -> {
+            updateContentPanel(new MainPanelWithoutId());
+        });
 
-        JPanel categoryPanel = new JPanel();
-        categoryPanel.setOpaque(false);
-        listsPanel.add(categoryPanel);
+        return mainButton;
+    }
 
-        JLabel label = new JLabel("제목");
-        label.setForeground(Color.WHITE);
-        label.setPreferredSize(new Dimension(280, 20));
-        label.setBackground(Color.BLACK);
-        categoryPanel.add(label);
+    private JButton quitButton() {
+        JButton signUpButton = new JButton("종료하기");
+        signUpButton.addActionListener(event -> {
+            System.exit(0);
+        });
+
+        return signUpButton;
+    }
+
+    private void contentPanel() {
+        contentPanel = new JPanel();
+        contentPanel.setBackground(new Color(0, 0, 0, 122));
+        contentPanel.setBorder(new LineBorder(Color.BLACK, 1));
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.setPreferredSize(new Dimension(550, 350));
+
+        this.add(contentPanel, BorderLayout.SOUTH);
+
+        guidePanel();
+    }
+
+    private void guidePanel() {
+        guidePanel = new JPanel();
+        guidePanel.setOpaque(false);
+        JLabel label1 = new JLabel("제목");
+        label1.setForeground(Color.WHITE);
+        label1.setPreferredSize(new Dimension(140, 15));
+        guidePanel.add(label1);
 
         JLabel label2 = new JLabel("작성자");
         label2.setForeground(Color.WHITE);
-        label2.setPreferredSize(new Dimension(50, 20));
-        label.setBackground(Color.pink);
-        categoryPanel.add(label2);
+        label2.setPreferredSize(new Dimension(35, 15));
+        guidePanel.add(label2);
 
-        listsPanel.add(eachReviewPanel());
+        contentPanel.add(guidePanel, BorderLayout.PAGE_START);
+
+        reviewsPanel();
     }
 
-    private JPanel eachReviewPanel() {
+    private void reviewsPanel() {
         JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(0, 1));
         panel.setBackground(new Color(255, 255, 255, 122));
-        panel.setPreferredSize(new Dimension(480, 10));
-        // TODO: 고정값으로 설정해놓은것!! 나중에 바꿔야함
-        JLabel titleLabel = new JLabel("[서울] 성수 위드번");
-        titleLabel.setBackground(Color.darkGray);
-        titleLabel.setForeground(Color.WHITE);
-        panel.add(titleLabel);
+        contentPanel.add(panel);
 
-        JLabel userIdLabel = new JLabel("hello");
-        userIdLabel.setBackground(Color.BLACK);
-        userIdLabel.setForeground(Color.WHITE);
-        panel.add(userIdLabel);
-
-        return panel;
-    }
-
-    private JPanel underPanel() {
-        underPanel = new JPanel();
-        underPanel.setOpaque(false);
-
-        JButton button = new JButton("1");
-        underPanel.add(button);
-
-        return underPanel;
+        for (Review review : reviews) {
+            reviewLabel = new JLabel();
+            reviewLabel.setHorizontalAlignment(JLabel.CENTER);
+            reviewLabel.setText(review.category() + " " + review.title() + "                       "
+                    + review.userId());
+            panel.add(reviewLabel);
+        }
     }
 
     private void updateContentPanel(JPanel panel) {
         this.removeAll();
         this.add(panel);
-
-        this.setVisible(false);
-        this.setVisible(true);
-    }
-
-    private void test() {
-        this.removeAll();
-
-        initButtonPanel();
-
-        initContentPanel();
-
-        listsPanel();
 
         this.setVisible(false);
         this.setVisible(true);

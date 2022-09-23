@@ -1,6 +1,8 @@
 package panels;
 
+import models.CurrentUser;
 import models.User;
+import utils.UserFileManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,25 +13,29 @@ import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class InitLoginPanel extends JPanel {
     private List<User> users;
+    private CurrentUser currentUser;
 
     private JPanel loginPanel;
     private JPanel buttonPanel;
     private JTextField passwordField;
     private JTextField idTextField;
 
-    public InitLoginPanel(List<User> users) {
-        this.users = users;
+    public InitLoginPanel() throws FileNotFoundException {
+        currentUser = new CurrentUser("");
 
-        this.setOpaque(false);
+        UserFileManager userFileManager = new UserFileManager();
+        users = userFileManager.loadUserLists();
 
-        this.add(loginPanel());
+        loginPanel();
     }
 
-    private JPanel loginPanel() {
+
+    private void loginPanel() {
         loginPanel = new JPanel();
         loginPanel.setLayout(new GridLayout(0, 1));
         loginPanel.setBackground(new Color(0, 0, 0, 122));
@@ -40,22 +46,11 @@ public class InitLoginPanel extends JPanel {
         idTextField();
         passwordLabel();
         passwordField();
+        buttonPanel();
 
-        loginPanel.add(buttonPanel());
+        this.setOpaque(false);
 
-        return loginPanel;
-    }
-
-    private JPanel buttonPanel() {
-        buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
-
-        buttonPanel.add(loginButton());
-        buttonPanel.add(signUpButton());
-        buttonPanel.add(withoutIdButton());
-        buttonPanel.add(quitButton());
-
-        return buttonPanel;
+        this.add(loginPanel);
     }
 
     private void idLabel() {
@@ -78,6 +73,18 @@ public class InitLoginPanel extends JPanel {
     private void passwordField() {
         passwordField = new JTextField(10);
         loginPanel.add(passwordField);
+    }
+
+    private void buttonPanel() {
+        buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+
+        buttonPanel.add(loginButton());
+        buttonPanel.add(signUpButton());
+        buttonPanel.add(withoutIdButton());
+        buttonPanel.add(quitButton());
+
+        loginPanel.add(buttonPanel);
     }
 
     private JButton loginButton() {
@@ -103,9 +110,9 @@ public class InitLoginPanel extends JPanel {
             if (id.length() != 0 && password.length() != 0) {
                 for (User user : users) {
                     if (id.equals(user.userId()) && password.equals(user.password())) {
-                        user.login();
+                        currentUser.login(idTextField.getText());
 
-                        updateContentPanel(new MainPanel(users));
+                        updateContentPanel(new MainPanel(users, currentUser));
 
                         return;
                     }

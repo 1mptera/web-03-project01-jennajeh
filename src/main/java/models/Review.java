@@ -1,34 +1,33 @@
 package models;
 
 public class Review {
-    private static final String DELETE = "delete";
-    private static final String CREATED = "created";
-    private static final String MODIFIED = "modified";
-
-    private static final String TITLE = "제목";
-    private static final String USERID = "아이디";
-
-    public static final String[] CATEGORY = {"선택하세요.", "제목", "아이디",};
+    public static final String TITLE = "제목";
+    public static final String USERID = "아이디";
 
     private String title;
     private String userId;
     private String userName;
-    private String time;
     private String content;
     private String status;
+    private String category;
 
-    public Review(String title, String userId, String userName, String time, String content, String status) {
+    public Review() {
+    }
+
+    public Review(String category, String title, String userId, String content) {
+        this.category = category;
         this.title = title;
         this.userId = userId;
-        this.userName = userName;
-        this.time = time;
         this.content = content;
         this.status = "created";
     }
 
-    public Review(String title, String userId) {
+    public Review(String category, String title, String userId, String content, String status) {
+        this.category = category;
         this.title = title;
         this.userId = userId;
+        this.content = content;
+        this.status = status;
     }
 
     public String title() {
@@ -43,10 +42,6 @@ public class Review {
         return userName;
     }
 
-    public String time() {
-        return time;
-    }
-
     public String content() {
         return content;
     }
@@ -55,11 +50,18 @@ public class Review {
         return status;
     }
 
-    public String toCsvRow() {
-        return title + "," + userId + "," + userName + "," + time + "," + content + "," + status;
+    public String category() {
+        return category;
     }
 
-    public void updateContent(String content) {
+    public String toCsvRow() {
+        return category + "," + title + "," + userId + "," + content + "," + status;
+    }
+
+    public void updateContent(String category, String title, String userId, String content) {
+        this.category = category;
+        this.title = title;
+        this.userId = userId;
         this.content = content;
         this.status = "modified";
     }
@@ -68,13 +70,7 @@ public class Review {
         this.status = "delete";
     }
 
-    public String displayTime() {
-        String displayTime = "";
-
-        String[] times = time.split("-");
-
-        displayTime = times[0];
-
-        return displayTime;
+    public void modified() {
+        this.status = "modified";
     }
 }

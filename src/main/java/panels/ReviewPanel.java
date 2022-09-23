@@ -1,7 +1,9 @@
 package panels;
 
+import models.CurrentUser;
 import models.Review;
 import models.User;
+import utils.ReviewFileManager;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,51 +15,91 @@ import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.List;
 
 public class ReviewPanel extends JPanel {
+    private Review review;
     private List<User> users;
-    String choice = "";
+    private List<Review> reviews;
+    private CurrentUser currentUser;
 
     private JPanel buttonPanel;
     private JPanel contentPanel;
     private JButton searchButton;
     private JTextField searchTextField;
     private JPanel searchPanel;
-    private JPanel listsPanel;
-    private JPanel underPanel;
+    private JPanel guidePanel;
+    private JLabel reviewLabel;
+    private JPanel reviewsPanel;
 
-    public ReviewPanel(List<User> users) {
+    public ReviewPanel(List<User> users, CurrentUser currentUser) throws FileNotFoundException {
         this.users = users;
+        this.currentUser = currentUser;
 
-        initButtonPanel();
+        this.setLayout(new BorderLayout());
+        this.setOpaque(false);
 
-        initContentPanel();
+        ReviewFileManager reviewFileManager = new ReviewFileManager();
+        reviews = reviewFileManager.loadReviews();
 
-        listsPanel();
+        buttonPanel(reviews);
     }
 
-    private void initButtonPanel() {
+    public ReviewPanel(Review review, List<User> users, CurrentUser currentUser) throws FileNotFoundException {
+        this.review = review;
+        this.users = users;
+        this.currentUser = currentUser;
+
+        this.setLayout(new BorderLayout());
+        this.setOpaque(false);
+
+        ReviewFileManager reviewFileManager = new ReviewFileManager();
+        reviews = reviewFileManager.loadReviews();
+
+
+        buttonPanel(reviews);
+
+    }
+
+    private void buttonPanel(List<Review> reviews) {
         buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
+        this.add(buttonPanel, BorderLayout.PAGE_START);
 
         buttonPanel.add(mainButton());
         buttonPanel.add(checkListButton());
         buttonPanel.add(createReviewButton());
         buttonPanel.add(logoutButton());
 
-        this.setLayout(new BorderLayout());
-        this.setOpaque(false);
-        this.add(buttonPanel, BorderLayout.PAGE_START);
+        searchPanel(reviews);
+    }
+
+    private void searchPanel(List<Review> reviews) {
+        searchPanel = new JPanel();
+        searchPanel.setOpaque(false);
+        this.add(searchPanel, BorderLayout.CENTER);
+
+        makeComboBox();
+
+        searchTextField = new JTextField(10);
+        searchPanel.add(searchTextField);
+
+        searchButton = new JButton("검색");
+        searchPanel.add(searchButton);
+
+        contentPanel();
     }
 
     private JButton mainButton() {
         JButton mainButton = new JButton("메인 화면");
         mainButton.addActionListener(event -> {
-            updateContentPanel(new MainPanel(users));
+            updateContentPanel(new MainPanel(users, currentUser));
         });
 
         return mainButton;
@@ -67,7 +109,7 @@ public class ReviewPanel extends JPanel {
         JButton checkListButton = new JButton("체크 리스트");
         checkListButton.addActionListener(event -> {
             try {
-                updateContentPanel(new CheckListPanel(users));
+                updateContentPanel(new CheckListPanel(currentUser));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -79,19 +121,9 @@ public class ReviewPanel extends JPanel {
     private JButton createReviewButton() {
         JButton createReviewButton = new JButton("글쓰기");
         createReviewButton.addActionListener(event -> {
-            // TODO: 나중에 프레임 창 띄워서 글 쓰기 생성하기
-            //WriteFrame writeFrame = new WriteFrame();
-            Review review = new Review("서브웨이 성수점", "hello");
-
-            JLabel title = new JLabel(review.title());
-            JLabel id = new JLabel(review.userId());
-
-            listsPanel.add(title);
-            listsPanel.add(id);
-
-            test();
-
+            updateContentPanel(new WriteReviewPanel(users, reviews, currentUser));
         });
+
         return createReviewButton;
     }
 
@@ -102,38 +134,16 @@ public class ReviewPanel extends JPanel {
 
             JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.", "Fries!", JOptionPane.PLAIN_MESSAGE);
 
-            updateContentPanel(new InitLoginPanel(users));
+            currentUser.logout();
+
+            try {
+                updateContentPanel(new InitLoginPanel());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         return logoutButton;
-    }
-
-    private void initContentPanel() {
-        contentPanel = new JPanel();
-
-        contentPanel.setBackground(new Color(0, 0, 0, 122));
-        contentPanel.setLayout(new BorderLayout());
-        contentPanel.setPreferredSize(new Dimension(620, 400));
-
-        contentPanel.add(searchPanel(), BorderLayout.PAGE_START);
-        contentPanel.add(underPanel(), BorderLayout.PAGE_END);
-        this.add(contentPanel);
-    }
-
-    private JPanel searchPanel() {
-        searchPanel = new JPanel();
-        searchPanel.setLayout(new BorderLayout());
-        searchPanel.setOpaque(false);
-
-        makeComboBox();
-
-        searchTextField = new JTextField(10);
-        searchPanel.add(searchTextField);
-
-        searchButton = new JButton("검색");
-        searchPanel.add(searchButton);
-
-        return searchPanel;
     }
 
     private void makeComboBox() {
@@ -149,85 +159,70 @@ public class ReviewPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource();
-                choice = (String) cb.getItemAt(cb.getSelectedIndex());
+                String choice = (String) cb.getItemAt(cb.getSelectedIndex());
             }
         });
 
         searchPanel.add(comboBox);
     }
 
-    private void listsPanel() {
-        listsPanel = new JPanel();
-        listsPanel.setOpaque(false);
-        // TODO: GridLayout 사이즈 나중에 바꿔야함.
-        listsPanel.setLayout(new BorderLayout());
-        listsPanel.setBorder(new LineBorder(Color.BLACK, 1));
-        listsPanel.setPreferredSize(new Dimension(550, 300));
-        contentPanel.add(listsPanel, BorderLayout.PAGE_START);
+    private void contentPanel() {
+        contentPanel = new JPanel();
+        contentPanel.setBackground(new Color(0, 0, 0, 122));
+        contentPanel.setBorder(new LineBorder(Color.BLACK, 1));
+        contentPanel.setLayout(new GridLayout(0, 1));
+        contentPanel.setPreferredSize(new Dimension(550, 350));
 
-        JPanel categoryPanel = new JPanel();
-        categoryPanel.setOpaque(false);
-        listsPanel.add(categoryPanel);
+        this.add(contentPanel, BorderLayout.SOUTH);
 
-        JLabel label = new JLabel("제목");
-        label.setForeground(Color.WHITE);
-        label.setPreferredSize(new Dimension(280, 20));
-        label.setBackground(Color.BLACK);
-        categoryPanel.add(label);
+        guidePanel();
+    }
+
+    private void guidePanel() {
+        guidePanel = new JPanel();
+        guidePanel.setOpaque(false);
+        JLabel label1 = new JLabel("제목");
+        label1.setForeground(Color.WHITE);
+        label1.setPreferredSize(new Dimension(140, 15));
+        guidePanel.add(label1);
 
         JLabel label2 = new JLabel("작성자");
         label2.setForeground(Color.WHITE);
-        label2.setPreferredSize(new Dimension(50, 20));
-        label.setBackground(Color.pink);
-        categoryPanel.add(label2);
+        label2.setPreferredSize(new Dimension(35, 15));
+        guidePanel.add(label2);
 
-        listsPanel.add(eachReviewPanel());
+        contentPanel.add(guidePanel, BorderLayout.PAGE_START);
+
+        reviewsPanel();
     }
 
-    private JPanel eachReviewPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(255, 255, 255, 122));
-        panel.setPreferredSize(new Dimension(480, 10));
-        // TODO: 고정값으로 설정해놓은것!! 나중에 바꿔야함
-        JLabel titleLabel = new JLabel("[서울] 성수 위드번");
-        titleLabel.setBackground(Color.darkGray);
-        titleLabel.setForeground(Color.WHITE);
-        panel.add(titleLabel);
+    private void reviewsPanel() {
+        for (Review review : reviews) {
+            if (review.status().equals("delete")) {
+                continue;
+            }
+            reviewsPanel = new JPanel();
+            reviewsPanel.setBackground(new Color(255, 255, 255, 122));
+            contentPanel.add(reviewsPanel);
 
-        JLabel userIdLabel = new JLabel("hello");
-        userIdLabel.setBackground(Color.BLACK);
-        userIdLabel.setForeground(Color.WHITE);
-        panel.add(userIdLabel);
+            reviewLabel = new JLabel();
+            reviewLabel.setHorizontalAlignment(JLabel.CENTER);
+            reviewLabel.setText(review.category() + " " + review.title() + "                       "
+                    + review.userId());
+            reviewsPanel.add(reviewLabel);
 
-        return panel;
-    }
-
-    private JPanel underPanel() {
-        underPanel = new JPanel();
-        underPanel.setOpaque(false);
-
-        JButton button = new JButton("1");
-        underPanel.add(button);
-
-        return underPanel;
+            reviewLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    updateContentPanel(new displayReviewPanel(review, users, reviews, currentUser));
+                }
+            });
+        }
     }
 
     private void updateContentPanel(JPanel panel) {
         this.removeAll();
         this.add(panel);
-
-        this.setVisible(false);
-        this.setVisible(true);
-    }
-
-    private void test() {
-        this.removeAll();
-
-        initButtonPanel();
-
-        initContentPanel();
-
-        listsPanel();
 
         this.setVisible(false);
         this.setVisible(true);

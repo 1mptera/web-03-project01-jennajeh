@@ -16,13 +16,16 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 public class signUpPanel extends JPanel {
     private List<User> users;
+
     String female = "";
     String male = "";
+    String gender = "";
 
     private JPanel signUpPanel;
     private JPanel buttonPanel;
@@ -35,15 +38,17 @@ public class signUpPanel extends JPanel {
 
         this.setOpaque(false);
 
-        this.add(signUpPanel());
+        signUpPanel();
     }
 
-    private JPanel signUpPanel() {
+    private void signUpPanel() {
         signUpPanel = new JPanel();
         signUpPanel.setLayout(new GridLayout(0, 1));
         signUpPanel.setBackground(new Color(0, 0, 0, 122));
         signUpPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
         signUpPanel.setPreferredSize(new Dimension(550, 300));
+
+        this.add(signUpPanel);
 
         idLabel();
         idTextField();
@@ -58,8 +63,6 @@ public class signUpPanel extends JPanel {
         selectGender();
 
         buttonPanel();
-
-        return signUpPanel;
     }
 
     private void idLabel() {
@@ -146,7 +149,6 @@ public class signUpPanel extends JPanel {
             String id = idTextField.getText();
             String password = passwordField.getText();
             String name = nameField.getText();
-            String gender = "";
 
             if (!female.isBlank()) {
                 male = "";
@@ -177,7 +179,7 @@ public class signUpPanel extends JPanel {
                 optionPane.showMessageDialog(null, "중복된 아이디 입니다. 다시 입력해 주세요.", "Access denied", JOptionPane.PLAIN_MESSAGE);
                 return;
             }
-            
+
             User user = new User(id, password, name, gender);
 
             users.add(user);
@@ -188,7 +190,11 @@ public class signUpPanel extends JPanel {
                 throw new RuntimeException(e);
             }
 
-            updatePanel(new InitLoginPanel(users));
+            try {
+                updatePanel(new InitLoginPanel());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
 
         });
 
