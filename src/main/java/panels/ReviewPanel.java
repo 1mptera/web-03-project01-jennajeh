@@ -6,7 +6,6 @@ import models.User;
 import utils.ReviewFileManager;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,8 +15,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
@@ -76,22 +73,6 @@ public class ReviewPanel extends JPanel {
         buttonPanel.add(createReviewButton());
         buttonPanel.add(logoutButton());
 
-        searchPanel(reviews);
-    }
-
-    private void searchPanel(List<Review> reviews) {
-        searchPanel = new JPanel();
-        searchPanel.setOpaque(false);
-        this.add(searchPanel, BorderLayout.CENTER);
-
-        makeComboBox();
-
-        searchTextField = new JTextField(10);
-        searchPanel.add(searchTextField);
-
-        searchButton = new JButton("검색");
-        searchPanel.add(searchButton);
-
         contentPanel();
     }
 
@@ -143,26 +124,6 @@ public class ReviewPanel extends JPanel {
         });
 
         return logoutButton;
-    }
-
-    private void makeComboBox() {
-        String[] category = {"제목", "작성자"};
-
-        JComboBox comboBox = new JComboBox();
-
-        for (int i = 0; i < category.length; i += 1) {
-            comboBox.addItem(category[i].toString());
-        }
-
-        comboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox) e.getSource();
-                String choice = (String) cb.getItemAt(cb.getSelectedIndex());
-            }
-        });
-
-        searchPanel.add(comboBox);
     }
 
     private void contentPanel() {
