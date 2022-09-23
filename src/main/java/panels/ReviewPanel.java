@@ -62,7 +62,6 @@ public class ReviewPanel extends JPanel {
         ReviewFileManager reviewFileManager = new ReviewFileManager();
         reviews = reviewFileManager.loadReviews();
 
-
         buttonPanel(reviews);
 
     }
@@ -203,6 +202,7 @@ public class ReviewPanel extends JPanel {
             }
             reviewsPanel = new JPanel();
             reviewsPanel.setBackground(new Color(255, 255, 255, 122));
+            reviewsPanel.setBorder(new LineBorder(Color.BLACK, 1));
             contentPanel.add(reviewsPanel);
 
             reviewLabel = new JLabel();

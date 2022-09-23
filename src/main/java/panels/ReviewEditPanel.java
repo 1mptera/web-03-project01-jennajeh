@@ -41,6 +41,7 @@ public class ReviewEditPanel extends JPanel {
     private String category = "";
     private String content = "";
     private String id = "";
+    private long idNumber = 0;
 
     public ReviewEditPanel(Review review, List<Review> reviews, CurrentUser currentUser) {
         this.review = review;
