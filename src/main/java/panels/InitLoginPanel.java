@@ -31,9 +31,6 @@ public class InitLoginPanel extends JPanel {
         UserFileManager userFileManager = new UserFileManager();
         users = userFileManager.loadUserLists();
 
-//        ReviewFileManager reviewFileManager = new ReviewFileManager();
-//        reviews = reviewFileManager.loadReviews();
-
         loginPanel();
     }
 

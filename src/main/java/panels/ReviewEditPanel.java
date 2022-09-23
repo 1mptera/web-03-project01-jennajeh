@@ -24,10 +24,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WriteReviewPanel extends JPanel {
+public class ReviewEditPanel extends JPanel {
     private List<User> users;
+    private Review review;
     private List<Review> reviews;
     private CurrentUser currentUser;
+    private JPanel initPanel;
+    private JTextField titleField;
+    private JPanel textAreaPanel;
+    private JTextArea textArea;
+    private JPanel buttonPanel;
+    private JComboBox comboBox;
 
     private String categoryData = "";
     private String title = "";
@@ -35,15 +42,8 @@ public class WriteReviewPanel extends JPanel {
     private String content = "";
     private String id = "";
 
-    private JPanel initPanel;
-    private JPanel textAreaPanel;
-    private JPanel buttonPanel;
-    private JTextField titleField;
-    private JComboBox comboBox;
-    private JTextArea textArea;
-
-    public WriteReviewPanel(List<User> users, List<Review> reviews, CurrentUser currentUser) {
-        this.users = users;
+    public ReviewEditPanel(Review review, List<Review> reviews, CurrentUser currentUser) {
+        this.review = review;
         this.reviews = reviews;
         this.currentUser = currentUser;
 
@@ -54,38 +54,28 @@ public class WriteReviewPanel extends JPanel {
     }
 
     private void initPanel() {
+        for (Review review : reviews) {
+            if (review.status().equals("delete")) {
+                continue;
+            }
+        }
+
         initPanel = new JPanel();
-        initPanel.setBackground(new Color(0, 0, 0, 122));
+        initPanel.setBackground(new Color(255, 255, 255, 122));
         initPanel.setLayout(new GridLayout(5, 1));
 
         this.add(initPanel, BorderLayout.PAGE_START);
-
-        titleLabel();
-    }
-
-    private void titleLabel() {
-        JLabel titleLabel = new JLabel("제목 : ");
-        titleLabel.setForeground(Color.WHITE);
-        initPanel.add(titleLabel);
-
-        titleField();
-    }
-
-    private void titleField() {
-        titleField = new JTextField(10);
-        initPanel.add(titleField);
 
         categoryLabel();
     }
 
     private void categoryLabel() {
         JLabel categoryLabel = new JLabel("카테고리 : ");
-        categoryLabel.setForeground(Color.WHITE);
         initPanel.add(categoryLabel);
 
         comboBox();
 
-        contentLabel();
+        titleLabel();
     }
 
     private void comboBox() {
@@ -108,9 +98,25 @@ public class WriteReviewPanel extends JPanel {
         initPanel.add(comboBox);
     }
 
+    private void titleLabel() {
+        JLabel titleLabel = new JLabel("제목 : ");
+        initPanel.add(titleLabel);
+
+        titleField();
+    }
+
+    private void titleField() {
+        titleField = new JTextField(10);
+
+        titleField.setText(reviews.get(0).title());
+
+        initPanel.add(titleField);
+
+        contentLabel();
+    }
+
     private void contentLabel() {
         JLabel contentLabel = new JLabel("내용 : ");
-        contentLabel.setForeground(Color.WHITE);
         initPanel.add(contentLabel);
 
         textAreaPanel();
@@ -119,14 +125,18 @@ public class WriteReviewPanel extends JPanel {
     private void textAreaPanel() {
         textAreaPanel = new JPanel();
         textAreaPanel.setOpaque(false);
-        this.add(textAreaPanel);
 
         textArea();
+
+        this.add(textAreaPanel);
     }
 
     private void textArea() {
         textArea = new JTextArea(15, 20);
         textArea.setBorder(new LineBorder(Color.BLACK, 1));
+
+        textArea.setText(reviews.get(0).content());
+
         textAreaPanel.add(textArea);
 
         buttonPanel();
@@ -137,39 +147,12 @@ public class WriteReviewPanel extends JPanel {
         buttonPanel.setOpaque(false);
         this.add(buttonPanel, BorderLayout.SOUTH);
 
-        addButton();
-
         backButton();
-    }
-
-    private void addButton() {
-        JButton addButton = new JButton("등록");
-        addButton.addActionListener(event -> {
-            category = categoryData;
-            title = titleField.getText();
-            id = currentUser.id();
-            content = textArea.getText();
-
-            if (content.isBlank()) {
-                return;
-            }
-
-            Review review = new Review(category, title, id, content);
-            reviews.add(review);
-
-            saveReview();
-
-            try {
-                updateContentPanel(new ReviewPanel(users, currentUser));
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        buttonPanel.add(addButton);
+        editButton();
     }
 
     private void backButton() {
-        JButton backButton = new JButton("취소");
+        JButton backButton = new JButton("목록");
         backButton.addActionListener(event -> {
             try {
                 updateContentPanel(new ReviewPanel(users, currentUser));
@@ -178,6 +161,29 @@ public class WriteReviewPanel extends JPanel {
             }
         });
         buttonPanel.add(backButton);
+    }
+
+    private void editButton() {
+        JButton editButton = new JButton("완료");
+        editButton.addActionListener(event -> {
+            if (!review.status().equals("delete")) {
+                category = categoryData;
+                title = titleField.getText();
+                id = currentUser.id();
+                content = textArea.getText();
+
+                review.updateContent(category, title, id, content);
+
+                saveReview();
+
+                try {
+                    updateContentPanel(new ReviewPanel(users, currentUser));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        buttonPanel.add(editButton);
     }
 
     private void saveReview() {

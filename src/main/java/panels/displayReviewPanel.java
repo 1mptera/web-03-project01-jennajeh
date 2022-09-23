@@ -3,9 +3,11 @@ package panels;
 import models.CurrentUser;
 import models.Review;
 import models.User;
+import utils.ReviewFileManager;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -14,25 +16,24 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public class displayReviewPanel extends JPanel {
-    private String categoryData = "";
-    private String title = "";
-    private String category = "";
-    private String content = "";
-    private String id = "";
-
-    private JPanel initPanel;
     private List<User> users;
     private List<Review> reviews;
     private CurrentUser currentUser;
+    private Review review;
+
+    private JPanel initPanel;
     private JTextField titleField;
     private JPanel textAreaPanel;
     private JTextArea textArea;
     private JPanel buttonPanel;
+    private ReviewEditPanel reviewEditPanel;
 
-    public displayReviewPanel(List<User> users, List<Review> reviews, CurrentUser currentUser) {
+    public displayReviewPanel(Review review, List<User> users, List<Review> reviews, CurrentUser currentUser) {
+        this.review = review;
         this.users = users;
         this.reviews = reviews;
         this.currentUser = currentUser;
@@ -55,7 +56,6 @@ public class displayReviewPanel extends JPanel {
 
     private void titleLabel() {
         JLabel titleLabel = new JLabel("제목 : ");
-        //titleLabel.setForeground(Color.WHITE);
         initPanel.add(titleLabel);
 
         titleField();
@@ -64,7 +64,9 @@ public class displayReviewPanel extends JPanel {
     private void titleField() {
         titleField = new JTextField(10);
         titleField.setEditable(false);
-        titleField.setText("[서울] 와하카: 웨이팅이 좀 길어요.");
+
+        titleField.setText(reviews.get(0).category() + " " + reviews.get(0).title());
+
         initPanel.add(titleField);
 
         contentLabel();
@@ -72,7 +74,6 @@ public class displayReviewPanel extends JPanel {
 
     private void contentLabel() {
         JLabel contentLabel = new JLabel("내용 : ");
-        //contentLabel.setForeground(Color.WHITE);
         initPanel.add(contentLabel);
 
         textAreaPanel();
@@ -90,8 +91,10 @@ public class displayReviewPanel extends JPanel {
     private void textArea() {
         textArea = new JTextArea(15, 20);
         textArea.setEditable(false);
-        textArea.setText("웨이팅은 무조건 있으니까 여유롭게 가세요!");
         textArea.setBorder(new LineBorder(Color.BLACK, 1));
+
+        textArea.setText(reviews.get(0).content());
+
         textAreaPanel.add(textArea);
 
         buttonPanel();
@@ -103,10 +106,12 @@ public class displayReviewPanel extends JPanel {
         this.add(buttonPanel, BorderLayout.SOUTH);
 
         backButton();
+        deleteButton();
+        editButton();
     }
 
     private void backButton() {
-        JButton backButton = new JButton("목록 보기");
+        JButton backButton = new JButton("목록");
         backButton.addActionListener(event -> {
             try {
                 updateContentPanel(new ReviewPanel(users, currentUser));
@@ -115,6 +120,48 @@ public class displayReviewPanel extends JPanel {
             }
         });
         buttonPanel.add(backButton);
+    }
+
+    private void deleteButton() {
+        JButton deleteButton = new JButton("삭제");
+        deleteButton.addActionListener(event -> {
+            review.delete();
+
+            saveReview();
+
+            try {
+                updateContentPanel(new ReviewPanel(users, currentUser));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        buttonPanel.add(deleteButton);
+    }
+
+    private void editButton() {
+        JButton editButton = new JButton("수정");
+        editButton.addActionListener(event -> {
+            if (!currentUser.id().equals(review.userId())) {
+                JOptionPane optionPane = new JOptionPane();
+
+                optionPane.showMessageDialog(null, "작성자만 수정할 수 있습니다.", "Access denied", JOptionPane.PLAIN_MESSAGE);
+
+                return;
+            }
+            
+            updateContentPanel(new ReviewEditPanel(review, reviews, currentUser));
+        });
+        buttonPanel.add(editButton);
+    }
+
+    private void saveReview() {
+        try {
+            ReviewFileManager reviewFileManager = new ReviewFileManager();
+
+            reviewFileManager.saveReviews(reviews);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void updateContentPanel(JPanel panel) {

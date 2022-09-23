@@ -24,10 +24,10 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 public class ReviewPanel extends JPanel {
+    private Review review;
     private List<User> users;
     private List<Review> reviews;
     private CurrentUser currentUser;
-    String choice = "";
 
     private JPanel buttonPanel;
     private JPanel contentPanel;
@@ -48,10 +48,24 @@ public class ReviewPanel extends JPanel {
         ReviewFileManager reviewFileManager = new ReviewFileManager();
         reviews = reviewFileManager.loadReviews();
 
-        buttonPanel();
+        buttonPanel(reviews);
     }
 
-    private void buttonPanel() {
+    public ReviewPanel(Review review, List<User> users, CurrentUser currentUser) throws FileNotFoundException {
+        this.review = review;
+        this.users = users;
+        this.currentUser = currentUser;
+
+        this.setLayout(new BorderLayout());
+        this.setOpaque(false);
+
+        ReviewFileManager reviewFileManager = new ReviewFileManager();
+        reviews = reviewFileManager.loadReviews();
+
+        buttonPanel(reviews);
+    }
+
+    private void buttonPanel(List<Review> reviews) {
         buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
         this.add(buttonPanel, BorderLayout.PAGE_START);
@@ -61,10 +75,10 @@ public class ReviewPanel extends JPanel {
         buttonPanel.add(createReviewButton());
         buttonPanel.add(logoutButton());
 
-        searchPanel();
+        searchPanel(reviews);
     }
 
-    private void searchPanel() {
+    private void searchPanel(List<Review> reviews) {
         searchPanel = new JPanel();
         searchPanel.setOpaque(false);
         this.add(searchPanel, BorderLayout.CENTER);
@@ -75,24 +89,6 @@ public class ReviewPanel extends JPanel {
         searchPanel.add(searchTextField);
 
         searchButton = new JButton("검색");
-        searchButton.addActionListener(event -> {
-            reviewsPanel.removeAll();
-
-            String category = choice;
-            String text = searchTextField.getText();
-
-            for (Review review : reviews) {
-                if (text.isBlank()) {
-                    continue;
-                }
-
-                reviewsPanel.removeAll();
-                buttonPanel();
-
-                reviewsPanel.setVisible(false);
-                reviewsPanel.setVisible(true);
-            }
-        });
         searchPanel.add(searchButton);
 
         contentPanel();
@@ -160,7 +156,7 @@ public class ReviewPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource();
-                choice = (String) cb.getItemAt(cb.getSelectedIndex());
+                String choice = (String) cb.getItemAt(cb.getSelectedIndex());
             }
         });
 
@@ -209,14 +205,14 @@ public class ReviewPanel extends JPanel {
             reviewLabel.setText(review.category() + " " + review.title() + "                       "
                     + review.userId());
             reviewsPanel.add(reviewLabel);
-        }
 
-        reviewLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                updateContentPanel(new displayReviewPanel(users, reviews, currentUser));
-            }
-        });
+            reviewLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    updateContentPanel(new displayReviewPanel(review, users, reviews, currentUser));
+                }
+            });
+        }
     }
 
     private void updateContentPanel(JPanel panel) {

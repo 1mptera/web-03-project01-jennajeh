@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,13 +67,12 @@ public class CheckListPanel extends JPanel {
 
     private void initButtonPanel() {
         buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
         buttonPanel.setOpaque(false);
 
         buttonPanel.add(mainButton());
         buttonPanel.add(logoutButton());
 
-        wholePanel.add(buttonPanel);
+        wholePanel.add(buttonPanel, BorderLayout.CENTER);
     }
 
     private JButton mainButton() {
@@ -115,7 +113,7 @@ public class CheckListPanel extends JPanel {
         label.setHorizontalAlignment(JLabel.CENTER);
 
         contentPanel.add(label);
-        buttonPanel.add(contentPanel, BorderLayout.PAGE_START);
+        buttonPanel.add(contentPanel, BorderLayout.SOUTH);
     }
 
     private void inputPanel() {
