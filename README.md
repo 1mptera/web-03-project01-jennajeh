@@ -6,7 +6,7 @@
 > https://user-images.githubusercontent.com/110010435/191997829-e6210e2a-5074-420d-8eb2-41d916c1e6b1.mp4
 
 ## 기능 내용 📲
-- 조금 더 자세한 화면 캡쳐 👉🏻 [참고](https://github.com/1mptera/web-03-project01-jennajeh/wiki/Week-5)
+- 조금 더 자세한 화면 캡쳐 👉🏻 [참고](https://github.com/megaptera-kr/web-03-project01-jennajeh/wiki/Share-your-Fries!-%F0%9F%8D%9F)
 
 ![스크린샷 2022-09-24 오전 12 08 17](https://user-images.githubusercontent.com/110010435/191993107-d8dce447-1ce2-44e6-a970-8208ad626f67.png)
 ![스크린샷 2022-09-24 오전 12 08 25](https://user-images.githubusercontent.com/110010435/191993124-9d65c084-2470-4647-be16-b389e0b2cb4f.png)
